@@ -341,22 +341,27 @@ jobs:
             dest="pages/packages/$arch"
             mkdir -p "$dest"
 
+            REPODATA_COUNT=0
+            for f in "$arch_dir"*-repodata; do
+              [ -f "$f" ] || continue
+              cp "$f" "$dest/"
+              REPODATA_COUNT=$((REPODATA_COUNT + 1))
+            done
+
             PKG_COUNT="$(find "$arch_dir" -name "*.xbps" | wc -l)"
             if [ "$PKG_COUNT" -gt 0 ]; then
               find "$arch_dir" \( \
-                -name "*.xbps" \
                 -o -name "*.xbps.sig" \
                 -o -name "*.xbps.sig2" \
-                -o -name "*-repodata" \
               \) -exec cp {} "$dest/" \;
-              echo "✔ $arch: $PKG_COUNT package(s)"
+              echo "✔ $arch: $PKG_COUNT package(s), $REPODATA_COUNT repodata file(s)"
             else
               echo "⚠  $arch: no packages found"
             fi
           done
 
-          if [ -f "void-supplements.pub.pem" ]; then
-            cp void-supplements.pub.pem pages/void-supplements.pub.pem
+          if [ -f "public.pem" ]; then
+            cp public.pem pages/public.pem
           fi
 
           echo ""
