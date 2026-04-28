@@ -1,0 +1,567 @@
+name: Build and Publish XBPS Repository
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/**"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build — ${{ matrix.target }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: ""
+            host_arch_flag: ""
+
+          - target: x86_64-musl
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: ""
+            host_arch_flag: "-A x86_64-musl"
+
+          - target: aarch64
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "aarch64"
+            host_arch_flag: ""
+
+          - target: aarch64-musl
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "aarch64-musl"
+            host_arch_flag: ""
+
+          - target: armv6l
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "armv6l"
+            host_arch_flag: ""
+
+          - target: armv6l-musl
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "armv6l-musl"
+            host_arch_flag: ""
+
+          - target: armv7l
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "armv7l"
+            host_arch_flag: ""
+
+          - target: armv7l-musl
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: "armv7l-musl"
+            host_arch_flag: ""
+
+          - target: i686
+            void_container: ghcr.io/void-linux/void-glibc-full:latest
+            cross_arch: ""
+            host_arch_flag: "-A i686"
+
+    container:
+      image: ${{ matrix.void_container }}
+      options: --privileged
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone void-packages
+        run: |
+          git clone --depth=1 \
+            https://github.com/void-linux/void-packages.git \
+            /void-packages
+
+      - name: Copy package templates
+        run: |
+          for pkg_dir in packages/*/; do
+            pkg_name="$(basename "$pkg_dir")"
+            echo "→ Copying template: $pkg_name"
+            cp -r "$pkg_dir" /void-packages/srcpkgs/"$pkg_name"
+          done
+
+      - name: Bootstrap xbps-src
+        working-directory: /void-packages
+        run: |
+          echo "XBPS_ALLOW_CHROOT_BREAKOUT=yes" >> etc/conf
+          echo "XBPS_CHROOT_CMD=uchroot"        >> etc/conf
+
+          if [ -n "${{ matrix.host_arch_flag }}" ]; then
+            ./xbps-src ${{ matrix.host_arch_flag }} binary-bootstrap
+          else
+            ./xbps-src binary-bootstrap
+          fi
+
+      - name: Install cross-compiler
+        if: matrix.cross_arch != ''
+        working-directory: /void-packages
+        run: |
+          LIBC="glibc"
+          ARCH="${{ matrix.cross_arch }}"
+          case "$ARCH" in *-musl) LIBC="musl" ;; esac
+          BASE_ARCH="${ARCH%%-musl}"
+
+          case "$BASE_ARCH" in
+            aarch64)  TRIPLE="aarch64-linux-gnu${LIBC:+hf}" ;;
+            armv6l)   TRIPLE="armv6l-linux-gnueabihf" ;;
+            armv7l)   TRIPLE="armv7l-linux-gnueabihf" ;;
+            *)        TRIPLE="" ;;
+          esac
+
+          xbps-install -Syu || true
+          if [ -n "$TRIPLE" ]; then
+            xbps-install -y "cross-${TRIPLE}" || true
+          fi
+
+      - name: Build packages
+        working-directory: /void-packages
+        run: |
+          TARGET="${{ matrix.target }}"
+          CROSS_ARCH="${{ matrix.cross_arch }}"
+          HOST_FLAG="${{ matrix.host_arch_flag }}"
+          FAILED_PKGS=""
+          BUILT_COUNT=0
+
+          for pkg_dir in /void-packages/srcpkgs/*/; do
+            pkg_name="$(basename "$pkg_dir")"
+
+            if [ ! -f "${GITHUB_WORKSPACE}/packages/${pkg_name}/template" ]; then
+              continue
+            fi
+
+            PKG_ARCHS=""
+            if grep -q "^archs=" "${pkg_dir}template" 2>/dev/null; then
+              PKG_ARCHS="$(grep "^archs=" "${pkg_dir}template" | \
+                sed 's/archs=//; s/"//g; s/'\''//g')"
+            fi
+
+            SHOULD_BUILD=true
+            if [ -n "$PKG_ARCHS" ]; then
+              SHOULD_BUILD=false
+              for allowed_arch in $PKG_ARCHS; do
+                if echo "$allowed_arch" | grep -q "^~"; then
+                  excluded="${allowed_arch#~}"
+                  if [ "$TARGET" = "$excluded" ]; then
+                    SHOULD_BUILD=false
+                    break
+                  else
+                    SHOULD_BUILD=true
+                  fi
+                elif [ "$allowed_arch" = "$TARGET" ] || \
+                     [ "$allowed_arch" = "noarch" ]; then
+                  SHOULD_BUILD=true
+                  break
+                fi
+              done
+            fi
+
+            if [ "$SHOULD_BUILD" = "false" ]; then
+              echo "⏭  Skipping $pkg_name — not supported on $TARGET (archs: $PKG_ARCHS)"
+              continue
+            fi
+
+            echo ""
+            echo "══════════════════════════════════════════"
+            echo "  Building: $pkg_name  →  $TARGET"
+            echo "══════════════════════════════════════════"
+
+            BUILD_CMD="./xbps-src"
+
+            if [ -n "$HOST_FLAG" ]; then
+              BUILD_CMD="$BUILD_CMD $HOST_FLAG"
+            fi
+
+            if [ -n "$CROSS_ARCH" ]; then
+              BUILD_CMD="$BUILD_CMD -a $CROSS_ARCH"
+            fi
+
+            BUILD_CMD="$BUILD_CMD pkg $pkg_name"
+
+            echo "Running: $BUILD_CMD"
+            if eval "$BUILD_CMD"; then
+              echo "✔ Built $pkg_name successfully"
+              BUILT_COUNT=$((BUILT_COUNT + 1))
+            else
+              echo "✘ FAILED: $pkg_name"
+              FAILED_PKGS="$FAILED_PKGS $pkg_name"
+            fi
+          done
+
+          echo ""
+          echo "Build summary for $TARGET:"
+          echo "  Built: $BUILT_COUNT packages"
+          if [ -n "$FAILED_PKGS" ]; then
+            echo "  Failed:$FAILED_PKGS"
+          fi
+
+      - name: Collect built packages
+        run: |
+          TARGET="${{ matrix.target }}"
+          STAGING="${GITHUB_WORKSPACE}/staging/${TARGET}"
+          mkdir -p "$STAGING"
+
+          BINPKGS_BASE="/void-packages/hostdir/binpkgs"
+
+          CROSS="${{ matrix.cross_arch }}"
+          if [ -n "$CROSS" ]; then
+            SRC_DIR="${BINPKGS_BASE}/${CROSS}"
+          elif [ -n "${{ matrix.host_arch_flag }}" ]; then
+            SRC_DIR="${BINPKGS_BASE}"
+          else
+            SRC_DIR="${BINPKGS_BASE}"
+          fi
+
+          if [ -d "$SRC_DIR" ]; then
+            find "$SRC_DIR" -maxdepth 2 -name "*.xbps" | while read -r pkg; do
+              cp "$pkg" "$STAGING/"
+              echo "  + $(basename "$pkg")"
+            done
+          fi
+
+          PKG_COUNT="$(find "$STAGING" -name "*.xbps" | wc -l)"
+          echo "Collected $PKG_COUNT package(s) for $TARGET"
+
+      - name: Sign packages and index repository
+        env:
+          XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
+          SIGN_BY: ${{ secrets.SIGN_BY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          TARGET="${{ matrix.target }}"
+          STAGING="${GITHUB_WORKSPACE}/staging/${TARGET}"
+
+          if [ ! -d "$STAGING" ] || \
+             [ "$(find "$STAGING" -name "*.xbps" | wc -l)" -eq 0 ]; then
+            echo "No packages built for $TARGET — skipping signing step"
+            exit 0
+          fi
+
+          PRIVKEY_FILE="$(mktemp /tmp/privkey.XXXXXX.pem)"
+          printf '%s' "$PRIVATE_KEY" > "$PRIVKEY_FILE"
+          chmod 600 "$PRIVKEY_FILE"
+
+          echo "Signing package files..."
+          xbps-rindex \
+            --privkey "$PRIVKEY_FILE" \
+            --sign-pkg \
+            "$STAGING"/*.xbps
+
+          echo "Building and signing repodata index..."
+          xbps-rindex \
+            --privkey "$PRIVKEY_FILE" \
+            --sign \
+            --signedby "$SIGN_BY" \
+            "$STAGING"
+
+          rm -f "$PRIVKEY_FILE"
+
+          echo "Signed $(find "$STAGING" -name "*.xbps" | wc -l) packages for $TARGET"
+          ls -lh "$STAGING"
+
+      - name: Upload staging artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-${{ matrix.target }}
+          path: staging/${{ matrix.target }}/
+          retention-days: 1
+          if-no-files-found: warn
+
+  publish:
+    name: Publish to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Download all staging artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: repo-*
+          path: all-staging/
+          merge-multiple: false
+
+      - name: Assemble pages directory
+        run: |
+          mkdir -p pages/packages
+
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
+            dest="pages/packages/$arch"
+            mkdir -p "$dest"
+
+            if [ -d "$arch_dir" ] && \
+               [ "$(find "$arch_dir" -name "*.xbps" | wc -l)" -gt 0 ]; then
+              cp "$arch_dir"*.xbps "$dest/" 2>/dev/null || true
+              cp "$arch_dir"*-repodata "$dest/" 2>/dev/null || true
+              echo "✔ $arch: $(find "$dest" -name "*.xbps" | wc -l) package(s)"
+            else
+              echo "⚠  $arch: no packages found"
+            fi
+          done
+
+          if [ -f "public.pem" ]; then
+            cp public.pem pages/public.pem
+          fi
+
+          echo ""
+          echo "Final pages structure:"
+          find pages/ -type f | sort
+
+      - name: Generate index.html
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"
+          BASE_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}"
+          COMMIT_SHA="${{ github.sha }}"
+          SHORT_SHA="${COMMIT_SHA:0:7}"
+          BUILD_DATE="$(date -u '+%Y-%m-%d %H:%M UTC')"
+
+          ARCH_ROWS=""
+          for arch_dir in pages/packages/*/; do
+            arch="$(basename "$arch_dir")"
+            count="$(find "$arch_dir" -name "*.xbps" | wc -l)"
+            if [ "$count" -gt 0 ]; then
+              STATUS_ICON="✅"
+              STATUS_CLASS="status-ok"
+            else
+              STATUS_ICON="⚠️"
+              STATUS_CLASS="status-empty"
+            fi
+            CONF_LINE="repository=${BASE_URL}/packages/${arch}"
+            ARCH_ROWS="${ARCH_ROWS}
+              <tr>
+                <td class='arch'>${arch}</td>
+                <td class='${STATUS_CLASS}'>${STATUS_ICON} ${count} package(s)</td>
+                <td class='conf'><code>${CONF_LINE}</code></td>
+              </tr>"
+          done
+
+          cat > pages/index.html << HTMLEOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${REPO_NAME} — Void Linux Repository</title>
+          <style>
+            :root {
+              --bg: #0f1117;
+              --surface: #1a1d27;
+              --border: #2e3147;
+              --accent: #5eead4;
+              --accent2: #818cf8;
+              --text: #e2e8f0;
+              --muted: #94a3b8;
+              --ok: #4ade80;
+              --warn: #facc15;
+              --code-bg: #0d1117;
+            }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+              background: var(--bg);
+              color: var(--text);
+              font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+              min-height: 100vh;
+              padding: 2rem 1rem;
+            }
+            a { color: var(--accent); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+
+            .container { max-width: 860px; margin: 0 auto; }
+
+            header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+            header h1 { font-size: 1.8rem; color: var(--accent); letter-spacing: -0.02em; }
+            header p  { color: var(--muted); margin-top: 0.4rem; font-size: 0.9rem; }
+            .meta { display: flex; gap: 1.5rem; margin-top: 0.8rem; font-size: 0.8rem; color: var(--muted); }
+            .meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+            section { margin-bottom: 2rem; }
+            h2 { font-size: 1rem; color: var(--accent2); margin-bottom: 0.8rem;
+                 text-transform: uppercase; letter-spacing: 0.08em; }
+
+            .steps { display: flex; flex-direction: column; gap: 0.6rem; counter-reset: step; }
+            .step { display: flex; gap: 1rem; align-items: flex-start; }
+            .step-num {
+              counter-increment: step;
+              flex-shrink: 0;
+              width: 1.6rem; height: 1.6rem;
+              background: var(--accent2);
+              color: var(--bg);
+              border-radius: 50%;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 0.75rem; font-weight: bold;
+            }
+            .step-content { flex: 1; }
+            .step-content p { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.3rem; }
+
+            pre, code {
+              background: var(--code-bg);
+              border: 1px solid var(--border);
+              border-radius: 6px;
+              font-family: inherit;
+              font-size: 0.82rem;
+            }
+            pre { padding: 0.9rem 1.1rem; overflow-x: auto; }
+            code { padding: 0.1rem 0.4rem; }
+            .inline-code { display: block; margin-top: 0.4rem; }
+
+            table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+            th { text-align: left; padding: 0.5rem 0.8rem;
+                 background: var(--surface); color: var(--muted);
+                 font-weight: normal; text-transform: uppercase;
+                 font-size: 0.72rem; letter-spacing: 0.06em;
+                 border-bottom: 1px solid var(--border); }
+            td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+            tr:last-child td { border-bottom: none; }
+            .arch { color: var(--accent); font-weight: bold; }
+            .status-ok   { color: var(--ok); }
+            .status-empty { color: var(--warn); }
+            .conf code { background: transparent; border: none;
+                         color: var(--muted); font-size: 0.78rem; }
+
+            .card {
+              background: var(--surface);
+              border: 1px solid var(--border);
+              border-radius: 8px;
+              padding: 1.2rem 1.4rem;
+            }
+
+            footer { margin-top: 3rem; padding-top: 1rem;
+                     border-top: 1px solid var(--border);
+                     font-size: 0.78rem; color: var(--muted); }
+          </style>
+          </head>
+          <body>
+          <div class="container">
+
+            <header>
+              <h1>📦 ${REPO_NAME}</h1>
+              <p>Custom Void Linux XBPS binary repository</p>
+              <div class="meta">
+                <span>🔨 Built from <code>${SHORT_SHA}</code></span>
+                <span>🕐 ${BUILD_DATE}</span>
+                <span>📎 <a href="https://github.com/${GITHUB_REPOSITORY}">${GITHUB_REPOSITORY}</a></span>
+              </div>
+            </header>
+
+            <section>
+              <h2>Quick Install</h2>
+              <div class="card steps">
+                <div class="step">
+                  <div class="step-num">1</div>
+                  <div class="step-content">
+                    <p>Add the repository for your architecture (example: x86_64 glibc)</p>
+                    <pre>echo 'repository=${BASE_URL}/packages/x86_64' \\
+                     | sudo tee /etc/xbps.d/99-${REPO_NAME}.conf</pre>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num">2</div>
+                  <div class="step-content">
+                    <p>Sync and accept the repository fingerprint</p>
+                    <pre>sudo xbps-install -S</pre>
+                    <p style="margin-top:0.5rem">When prompted, verify the fingerprint matches the one in this repo's <code>void-supplements.pub.pem</code> and press <code>y</code>.</p>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num">3</div>
+                  <div class="step-content">
+                    <p>Install packages as usual</p>
+                    <pre>sudo xbps-install -S &lt;package-name&gt;</pre>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2>Available Architectures</h2>
+              <div class="card" style="padding: 0; overflow: hidden;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Architecture</th>
+                      <th>Status</th>
+                      <th>Repository URL (for /etc/xbps.d/)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${ARCH_ROWS}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section>
+              <h2>Public Signing Key</h2>
+              <div class="card">
+                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:0.7rem">
+                  All packages are signed with an RSA key. XBPS will ask you to accept it
+                  on first sync. You can also import it manually:
+                </p>
+                <pre>curl -L ${BASE_URL}/void-supplements.pub.pem | sudo xbps-rindex --import-key /dev/stdin</pre>
+              </div>
+            </section>
+
+            <footer>
+              Built automatically by GitHub Actions from
+              <a href="https://github.com/${GITHUB_REPOSITORY}">${GITHUB_REPOSITORY}</a>
+              · Powered by
+              <a href="https://voidlinux.org">Void Linux</a> xbps-src
+            </footer>
+
+          </div>
+          </body>
+          </html>
+          HTMLEOF
+
+          echo "index.html generated"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+          publish_branch: site
+          publish_dir: pages/
+          keep_files: true
+          full_commit_message: |
+            chore: publish packages from ${{ github.sha }}
+
+            Built by GitHub Actions run #${{ github.run_number }}
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+
+      - name: Print deployment summary
+        run: |
+          REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo "## ✅ Repository Published" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**URL:** https://${REPO_OWNER}.github.io/${REPO_NAME}/" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Architecture | Packages |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          for arch_dir in pages/packages/*/; do
+            arch="$(basename "$arch_dir")"
+            count="$(find "$arch_dir" -name "*.xbps" 2>/dev/null | wc -l)"
+            echo "| \`${arch}\` | ${count} |" >> "$GITHUB_STEP_SUMMARY"
+          done
