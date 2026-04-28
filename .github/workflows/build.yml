@@ -72,6 +72,27 @@ jobs:
       options: --privileged
 
     steps:
+      - name: Install base build tools
+        run: |
+          xbps-install -Syu xbps
+          xbps-install -yu \
+            git \
+            curl \
+            wget \
+            ca-certificates \
+            bash \
+            coreutils \
+            findutils \
+            gawk \
+            grep \
+            sed \
+            tar \
+            gzip \
+            xz \
+            bzip2 \
+            zstd \
+            openssl
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
