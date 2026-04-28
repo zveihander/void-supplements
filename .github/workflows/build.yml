@@ -351,7 +351,7 @@ jobs:
             PKG_COUNT="$(find "$arch_dir" -name "*.xbps" | wc -l)"
             if [ "$PKG_COUNT" -gt 0 ]; then
               find "$arch_dir" \( \
-                -o -name "*.xbps.sig" \
+                -name "*.xbps.sig" \
                 -o -name "*.xbps.sig2" \
               \) -exec cp {} "$dest/" \;
               echo "✔ $arch: $PKG_COUNT package(s), $REPODATA_COUNT repodata file(s)"
