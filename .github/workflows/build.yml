@@ -235,16 +235,22 @@ jobs:
           BINPKGS_BASE="/void-packages/hostdir/binpkgs"
 
           CROSS="${{ matrix.cross_arch }}"
+
           if [ -n "$CROSS" ]; then
             SRC_DIR="${BINPKGS_BASE}/${CROSS}"
-          elif [ -n "${{ matrix.host_arch_flag }}" ]; then
-            SRC_DIR="${BINPKGS_BASE}"
           else
             SRC_DIR="${BINPKGS_BASE}"
           fi
 
           if [ -d "$SRC_DIR" ]; then
-            find "$SRC_DIR" -maxdepth 2 -name "*.xbps" | while read -r pkg; do
+            find "$SRC_DIR" -name "*.xbps" | while read -r pkg; do
+              cp "$pkg" "$STAGING/"
+              echo "  + $(basename "$pkg")"
+            done
+          else
+            echo "WARNING: expected output dir not found: $SRC_DIR"
+            echo "Falling back to searching all of binpkgs/ for *.$TARGET.xbps"
+            find "$BINPKGS_BASE" -name "*.$TARGET.xbps" | while read -r pkg; do
               cp "$pkg" "$STAGING/"
               echo "  + $(basename "$pkg")"
             done
@@ -272,11 +278,16 @@ jobs:
           printf '%s' "$PRIVATE_KEY" > "$PRIVKEY_FILE"
           chmod 600 "$PRIVKEY_FILE"
 
+          echo "Indexing packages..."
+          xbps-rindex -a "$STAGING"/*.xbps
+
           echo "Signing package files..."
-          xbps-rindex \
-            --privkey "$PRIVKEY_FILE" \
-            --sign-pkg \
-            "$STAGING"/*.xbps
+          for pkg in "$STAGING"/*.xbps; do
+            xbps-rindex \
+              --privkey "$PRIVKEY_FILE" \
+              --sign-pkg \
+              "$pkg"
+          done
 
           echo "Building and signing repodata index..."
           xbps-rindex \
