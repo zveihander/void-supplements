@@ -341,16 +341,15 @@ jobs:
             dest="pages/packages/$arch"
             mkdir -p "$dest"
 
-            REPODATA_COUNT=0
-            for f in "$arch_dir"*-repodata; do
-              [ -f "$f" ] || continue
-              cp "$f" "$dest/"
-              REPODATA_COUNT=$((REPODATA_COUNT + 1))
-            done
-
             PKG_COUNT="$(find "$arch_dir" -name "*.xbps" | wc -l)"
             if [ "$PKG_COUNT" -gt 0 ]; then
-              echo "✔ $arch: $PKG_COUNT package(s), $REPODATA_COUNT repodata file(s)"
+              find "$arch_dir" \( \
+                -name "*.xbps" \
+                -o -name "*.xbps.sig" \
+                -o -name "*.xbps.sig2" \
+                -o -name "*-repodata" \
+              \) -exec cp {} "$dest/" \;
+              echo "✔ $arch: $PKG_COUNT package(s)"
             else
               echo "⚠  $arch: no packages found"
             fi
@@ -401,8 +400,8 @@ jobs:
           BUILD_DATE="$(date -u '+%Y-%m-%d %H:%M UTC')"
 
           ARCH_ROWS=""
-          for arch_dir in pages/packages/*/; do
-            arch="$(basename "$arch_dir")"
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
             count="$(find "$arch_dir" -name "*.xbps" | wc -l)"
             if [ "$count" -gt 0 ]; then
               STATUS_ICON="✅"
