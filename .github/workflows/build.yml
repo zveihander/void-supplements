@@ -279,7 +279,7 @@ jobs:
           chmod 600 "$PRIVKEY_FILE"
 
           echo "Indexing packages..."
-          xbps-rindex -a "$STAGING"/*.xbps
+          XBPS_TARGET_ARCH="$TARGET" xbps-rindex -a "$STAGING"/*.xbps
 
           echo "Signing package files..."
           for pkg in "$STAGING"/*.xbps; do
@@ -289,8 +289,8 @@ jobs:
               "$pkg"
           done
 
-          echo "Building and signing repodata index..."
-          xbps-rindex \
+          echo "Signing repodata index..."
+          XBPS_TARGET_ARCH="$TARGET" xbps-rindex \
             --privkey "$PRIVKEY_FILE" \
             --sign \
             --signedby "$SIGN_BY" \
@@ -298,7 +298,7 @@ jobs:
 
           rm -f "$PRIVKEY_FILE"
 
-          echo "Signed $(find "$STAGING" -name "*.xbps" | wc -l) packages for $TARGET"
+          echo "Done. Final staging contents:"
           ls -lh "$STAGING"
 
       - name: Upload staging artifact
@@ -341,23 +341,55 @@ jobs:
             dest="pages/packages/$arch"
             mkdir -p "$dest"
 
-            if [ -d "$arch_dir" ] && \
-               [ "$(find "$arch_dir" -name "*.xbps" | wc -l)" -gt 0 ]; then
-              cp "$arch_dir"*.xbps "$dest/" 2>/dev/null || true
-              cp "$arch_dir"*-repodata "$dest/" 2>/dev/null || true
-              echo "✔ $arch: $(find "$dest" -name "*.xbps" | wc -l) package(s)"
+            REPODATA_COUNT=0
+            for f in "$arch_dir"*-repodata; do
+              [ -f "$f" ] || continue
+              cp "$f" "$dest/"
+              REPODATA_COUNT=$((REPODATA_COUNT + 1))
+            done
+
+            PKG_COUNT="$(find "$arch_dir" -name "*.xbps" | wc -l)"
+            if [ "$PKG_COUNT" -gt 0 ]; then
+              echo "✔ $arch: $PKG_COUNT package(s), $REPODATA_COUNT repodata file(s)"
             else
               echo "⚠  $arch: no packages found"
             fi
           done
 
-          if [ -f "public.pem" ]; then
-            cp public.pem pages/public.pem
+          if [ -f "void-supplements.pub.pem" ]; then
+            cp void-supplements.pub.pem pages/void-supplements.pub.pem
           fi
 
           echo ""
           echo "Final pages structure:"
           find pages/ -type f | sort
+
+      - name: Upload packages to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
+            XBPS_FILES="$(find "$arch_dir" -name "*.xbps" 2>/dev/null)"
+
+            if [ -z "$XBPS_FILES" ]; then
+              echo "⚠  $arch: no .xbps files, skipping release upload"
+              continue
+            fi
+
+            TAG="packages-${arch}"
+            echo "Uploading $arch packages to release tag: $TAG"
+
+            gh release delete "$TAG" --yes 2>/dev/null || true
+            gh release create "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Binary packages: ${arch}" \
+              --notes "XBPS packages for \`${arch}\`." \
+              --latest=false \
+              $XBPS_FILES
+
+            echo "✔ $arch: uploaded $(echo "$XBPS_FILES" | wc -l) file(s)"
+          done
 
       - name: Generate index.html
         run: |
