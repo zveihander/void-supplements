@@ -360,7 +360,7 @@ jobs:
             gh release create "$TAG" \
               --repo "$GITHUB_REPOSITORY" \
               --title "${arch}" \
-              --notes "An XBPS binary repository for \`${arch}\`. To enable, create a new file at \`/etc/xbps.d/90-void-supplements.conf\` with the contents  \`repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}\`"
+              --notes "An XBPS binary repository for \`${arch}\`. To enable, create a new file at \`/etc/xbps.d/90-void-supplements.conf\` with the contents  \`repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}\`" \
               --prerelease \
               $FILES
 
