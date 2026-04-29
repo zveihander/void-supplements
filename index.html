@@ -1,9 +1,243 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>zveihander's XBPS packages for Void Linux</title>
-  </head>
-  <body></body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>zveihander's xbps package repository for void linux</title>
+<style>
+/* zenburn */
+:root {
+  --bg:      #3f3f3f;
+  --bg-1:    #2b2b2b;
+  --bg-2:    #383838;
+  --fg:      #dcdccc;
+  --fg-dim:  #8f8f8f;
+  --yellow:  #e8ae5b;
+  --green:   #7f9f7f;
+  --red:     #cc9393;
+  --blue:    #8cd0d3;
+  --purple:  #c0bed1;
+  --orange:  #dfaf8f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-1);
+  color: var(--fg);
+  font-family: "Terminus", "Lucida Console", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--yellow); }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--bg-2);
+  margin: 1.5rem 0;
+}
+
+#header {
+  border-bottom: 1px solid var(--fg-dim);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#header h1 {
+  color: var(--yellow);
+  font-size: 1.2rem;
+  font-weight: normal;
+  letter-spacing: 0.04em;
+}
+
+#header h1 span { color: var(--fg-dim); }
+
+#header p {
+  color: var(--fg-dim);
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+}
+
+h2 {
+  color: var(--orange);
+  font-size: 0.85rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.7rem;
+}
+
+section { margin-bottom: 2rem; }
+
+.meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.1rem 1.5rem;
+  font-size: 0.88rem;
+}
+
+.meta .k { color: var(--fg-dim); }
+.meta .v { color: var(--fg); }
+.meta .v a { color: var(--blue); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+thead tr { border-bottom: 1px solid var(--fg-dim); }
+th {
+  text-align: left;
+  color: var(--fg-dim);
+  font-weight: normal;
+  padding: 0.2rem 0.8rem 0.3rem 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+td { padding: 0.25rem 0.8rem 0.25rem 0; vertical-align: top; }
+tbody tr:hover { background: var(--bg-2); }
+
+.arch { color: var(--green); }
+.status-ok    { color: var(--green); }
+.status-empty { color: var(--red); }
+.conf { color: var(--fg-dim); font-size: 0.82rem; }
+
+pre, code {
+  font-family: inherit;
+  background: var(--bg-2);
+  color: var(--fg);
+}
+
+pre {
+  padding: 0.6rem 0.9rem;
+  overflow-x: auto;
+  border-left: 2px solid var(--fg-dim);
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+code {
+  padding: 0.05rem 0.3rem;
+  font-size: 0.88rem;
+}
+
+.steps { display: flex; flex-direction: column; gap: 0.9rem; }
+.step-label {
+  color: var(--purple);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.2rem;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--bg-2);
+  color: var(--fg-dim);
+  font-size: 0.8rem;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>[ <span>zveihander/</span>void-supplements ]</h1>
+  <p>a binary xbps repository for void linux</p>
+</div>
+
+<section>
+  <h2>about</h2>
+  <div class="meta">
+    <span class="k">maintainer</span>  <span class="v"><a href="https://github.com/zveihander">evan alvarez</a</span>
+    <span class="k">source</span>      <span class="v"><a href="https://github.com/zveihander/void-supplements">github.com/zveihander/void-supplements</a></span>
+    <span class="k">signing key</span> <span class="v"><a href="./void-supplements.pub.pem">void-supplements.pub.pem</a></span>
+    <span class="k">ci</span>          <span class="v"><a href="https://github.com/zveihander/void-supplements/actions">github actions</a></span>
+    <span class="k">built with</span>  <span class="v">xbps-src and friends</span>
+    <span class="k">license</span>     <span class="v">see individual packages</span>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>packages</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>arch</th>
+        <th>packages</th>
+        <th>repository url</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class='arch'>aarch64</td><td class='status-ok'>✅ 1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/aarch64</code></td></tr><tr><td class='arch'>x86_64</td><td class='status-ok'>✅ 1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/x86_64</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr>
+
+<section>
+  <h2>installation</h2>
+  <div class="steps">
+
+    <div>
+      <div class="step-label">1 — add repository</div>
+      <p style="color:var(--fg-dim);font-size:0.88rem;margin-bottom:0.3rem">replace <code>x86_64</code> with your arch. run <code>xbps-uhelper arch</code> if unsure.</p>
+      <pre>echo 'repository=https://github.com/zveihander/void-supplements/releases/download/x86_64' \
+  | sudo tee /etc/xbps.d/90-void-supplements.conf</pre>
+    </div>
+
+    <div>
+      <div class="step-label">2 — sync &amp; accept signing key</div>
+      <p style="color:var(--fg-dim);font-size:0.88rem;margin-bottom:0.3rem">xbps will show the key fingerprint on first sync. verify it matches <a href="./void-supplements.pub.pem">void-supplements.pub.pem</a> before accepting.</p>
+      <pre>sudo xbps-install -S</pre>
+    </div>
+
+    <div>
+      <div class="step-label">3 — install</div>
+      <pre>sudo xbps-install -S &lt;pkgname&gt;</pre>
+    </div>
+
+    <div>
+      <div class="step-label">optional — import key manually</div>
+      <pre>curl -L https://zveihander.github.io/void-supplements/void-supplements.pub.pem \
+  | sudo xbps-rindex --import-key /dev/stdin</pre>
+    </div>
+
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>notes</h2>
+  <p style="color:var(--fg-dim);font-size:0.88rem;line-height:1.8">
+    packages are built automatically on every push to <code>master</code> that touches
+    <code>packages/</code>. each architecture is built in parallel inside a void linux
+    container using <code>xbps-src</code>. arm targets are cross-compiled from x86_64.
+    not every package supports every architecture — check the template's <code>archs=</code> field.
+    all packages are rsa-signed.
+  </p>
+</section>
+
+<footer>
+  <a href="https://github.com/zveihander/void-supplements">source</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://github.com/zveihander/void-supplements/actions">ci</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://github.com/zveihander/void-supplements/releases">releases</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://voidlinux.org">void linux</a>
+</footer>
+
+</body>
 </html>
