@@ -338,7 +338,7 @@ jobs:
         run: |
           for arch_dir in all-staging/repo-*/; do
             arch="$(basename "$arch_dir" | sed 's/^repo-//')"
-            TAG="packages-${arch}"
+            TAG="${arch}"
 
             FILES="$(find "$arch_dir" \( \
               -name "*.xbps" \
@@ -359,8 +359,8 @@ jobs:
 
             gh release create "$TAG" \
               --repo "$GITHUB_REPOSITORY" \
-              --title "Packages: ${arch}" \
-              --notes "XBPS binary repository for \`${arch}\`. Add to \`/etc/xbps.d/99-void-supplements.conf\`:\n\`\`\`\nrepository=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}\n\`\`\`" \
+              --title "${arch}" \
+              --notes "An XBPS binary repository for \`${arch}\`. To enable, create a new file at \`/etc/xbps.d/90-void-supplements.conf\` with the contents  \`repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}\`"
               --prerelease \
               $FILES
 
@@ -387,14 +387,13 @@ jobs:
           for arch_dir in all-staging/repo-*/; do
             arch="$(basename "$arch_dir" | sed 's/^repo-//')"
             count="$(find "$arch_dir" -name "*.xbps" | wc -l)"
-            TAG="packages-${arch}"
+            TAG="${arch}"
             REPO_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}"
             if [ "$count" -gt 0 ]; then
               ARCH_ROWS="${ARCH_ROWS}<tr><td class='arch'>${arch}</td><td class='status-ok'>✅ ${count} package(s)</td><td class='conf'><code>repository=${REPO_URL}</code></td></tr>"
             fi
           done
 
-          # Patch the arch table into index.html if it has a placeholder
           sed -i "s|<!-- ARCH_ROWS_PLACEHOLDER -->|${ARCH_ROWS}|g" pages/index.html || true
 
       - name: Deploy landing page to GitHub Pages
