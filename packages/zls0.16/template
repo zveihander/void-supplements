@@ -1,0 +1,36 @@
+# Template file for 'zls0.16'
+pkgname=zls0.16
+version=0.16.0
+revision=1
+archs="x86_64 aarch64 armv7l i686"
+conflicts="zls0.15"
+create_wrksrc=yes
+short_desc="Zig language server"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://github.com/zigtools/zls"
+nostrip=yes
+nopie=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-x86_64-linux.tar.xz"
+    checksum=ded6d562a0b86ee878b1ddf70ffab2797ce3cdca3b02d6077548f9d56dff96b6
+    ;;
+aarch64)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-aarch64-linux.tar.xz"
+    checksum=430cd293d201eb70ae2519dbc96c854bf8791b8df7fc9392e8d2dc9680a2bed7
+    ;;
+armv7l)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-arm-linux.tar.xz"
+    checksum=7cf8d11f914127809b89254ad97e4b96d84294370418954a49b78bd623d3c55e
+    ;;
+i686)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-x86-linux.tar.xz"
+    checksum=2f7965da884d74d9f7e8b8ef1208ae137084680ddf8580473ff412f62a4051a8
+    ;;
+esac
+
+do_install() {
+    vbin zls
+}

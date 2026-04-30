@@ -1,0 +1,10 @@
+# Template file for 'zls'
+pkgname=zls
+version=0.16
+revision=1
+metapackage=yes
+depends="zls${version}"
+short_desc="Zig language server"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://github.com/zigtools/zls"

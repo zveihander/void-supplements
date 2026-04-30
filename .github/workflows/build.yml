@@ -104,6 +104,16 @@ jobs:
             https://github.com/void-linux/void-packages.git \
             /void-packages
 
+      - name: Restore xbps-src cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /void-packages/hostdir/binpkgs
+            /void-packages/masterdir
+          key: xbps-src-${{ matrix.target }}-${{ hashFiles('packages/**/template') }}
+          restore-keys: |
+            xbps-src-${{ matrix.target }}-
+
       - name: Copy package templates
         run: |
           for pkg_dir in packages/*/; do
@@ -210,7 +220,11 @@ jobs:
             BUILD_CMD="$BUILD_CMD pkg $pkg_name"
 
             echo "Running: $BUILD_CMD"
-            if eval "$BUILD_CMD"; then
+            EXISTING=$(find /void-packages/hostdir/binpkgs -name "${pkg_name}-*.xbps" 2>/dev/null | head -1)
+            if [ -n "$EXISTING" ]; then
+              echo "$pkg_name already built (cached): $(basename "$EXISTING")"
+              BUILT_COUNT=$((BUILT_COUNT + 1))
+            elif eval "$BUILD_CMD"; then
               echo "✔ Built $pkg_name successfully"
               BUILT_COUNT=$((BUILT_COUNT + 1))
             else
@@ -224,7 +238,16 @@ jobs:
           echo "  Built: $BUILT_COUNT packages"
           if [ -n "$FAILED_PKGS" ]; then
             echo "  Failed:$FAILED_PKGS"
-          fi
+          fie
+
+      - name: Save xbps-src cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /void-packages/hostdir/binpkgs
+            /void-packages/masterdir
+          key: xbps-src-${{ matrix.target }}-${{ hashFiles('packages/**/template') }}
 
       - name: Collect built packages
         run: |
@@ -380,6 +403,7 @@ jobs:
 
           cp main-repo/index.html pages/index.html 2>/dev/null || true
           cp main-repo/packages.html pages/packages.html 2>/dev/null || true
+          cp main-repo/favicon.svg pages/favicon.svg 2>/dev/null || true
           cp main-repo/void-supplements.pub.pem pages/void-supplements.pub.pem 2>/dev/null || true
 
           REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"

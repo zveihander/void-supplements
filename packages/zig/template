@@ -1,0 +1,10 @@
+# Template file for 'zig'
+pkgname=wlroots
+version=0.16
+revision=1
+metapackage=yes
+depends="zig${version}"
+short_desc="Programming language designed for robustness, optimality, and clarity"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://ziglang.org/"
