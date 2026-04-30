@@ -379,6 +379,7 @@ jobs:
           mkdir -p pages
 
           cp main-repo/index.html pages/index.html 2>/dev/null || true
+          cp main-repo/packages.html pages/packages.html 2>/dev/null || true
           cp main-repo/void-supplements.pub.pem pages/void-supplements.pub.pem 2>/dev/null || true
 
           REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"
@@ -390,7 +391,7 @@ jobs:
             TAG="${arch}"
             REPO_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}"
             if [ "$count" -gt 0 ]; then
-              ARCH_ROWS="${ARCH_ROWS}<tr><td class='arch'>${arch}</td><td class='status-ok'>✅ ${count} package(s)</td><td class='conf'><code>repository=${REPO_URL}</code></td></tr>"
+              ARCH_ROWS="${ARCH_ROWS}<tr><td class='arch'>${arch}</td><td class='status-ok'>${count} package(s)</td><td class='conf'><code>repository=${REPO_URL}</code></td></tr>"
             fi
           done
 
