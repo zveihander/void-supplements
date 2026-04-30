@@ -4,6 +4,7 @@ version=0.16
 revision=1
 metapackage=yes
 depends="zls${version}"
+archs="x86_64 aarch64 armv7l i686"
 short_desc="Zig language server"
 maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
 license="MIT"
