@@ -2,7 +2,7 @@
 pkgname=zls0.15
 version=0.15.1
 revision=1
-archs="x86_64 aarch64 armv7l i686"
+archs="x86_64 aarch64 armv7l i686 x86_64-musl aarch64-musl"
 conflicts="zls0.16"
 create_wrksrc=yes
 short_desc="Zig language server"
