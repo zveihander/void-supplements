@@ -21,6 +21,14 @@ aarch64)
     distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-aarch64-linux.tar.xz"
     checksum=430cd293d201eb70ae2519dbc96c854bf8791b8df7fc9392e8d2dc9680a2bed7
     ;;
+x86_64-musl)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-x86_64-linux.tar.xz"
+    checksum=ded6d562a0b86ee878b1ddf70ffab2797ce3cdca3b02d6077548f9d56dff96b6
+    ;;
+aarch64-musl)
+    distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-aarch64-linux.tar.xz"
+    checksum=430cd293d201eb70ae2519dbc96c854bf8791b8df7fc9392e8d2dc9680a2bed7
+    ;;
 armv7l)
     distfiles="https://github.com/zigtools/zls/releases/download/${version}/zls-arm-linux.tar.xz"
     checksum=7cf8d11f914127809b89254ad97e4b96d84294370418954a49b78bd623d3c55e
