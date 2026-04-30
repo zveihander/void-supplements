@@ -1,3 +1,8 @@
 [
-
+  {"name":"zls","version":"0.13.0_1","arch":"armv6l","filename":"zls-0.13.0_1.armv6l.xbps","size":1220072,"url":"https://github.com/zveihander/void-supplements/releases/download/armv6l/zls-0.13.0_1.armv6l.xbps"},
+  {"name":"zig0.15","version":"0.15.2_1","arch":"i686","filename":"zig0.15-0.15.2_1.i686.xbps","size":72845627,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zig0.15-0.15.2_1.i686.xbps"},
+  {"name":"zig0.16","version":"0.16.0_1","arch":"i686","filename":"zig0.16-0.16.0_1.i686.xbps","size":75520970,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zig0.16-0.16.0_1.i686.xbps"},
+  {"name":"zls0.15","version":"0.15.1_1","arch":"i686","filename":"zls0.15-0.15.1_1.i686.xbps","size":4675476,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zls0.15-0.15.1_1.i686.xbps"},
+  {"name":"zls0.16","version":"0.16.0_1","arch":"i686","filename":"zls0.16-0.16.0_1.i686.xbps","size":5062733,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zls0.16-0.16.0_1.i686.xbps"},
+  {"name":"zls","version":"0.13.0_1","arch":"x86_64-musl","filename":"zls-0.13.0_1.x86_64-musl.xbps","size":1182207,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zls-0.13.0_1.x86_64-musl.xbps"}
 ]
