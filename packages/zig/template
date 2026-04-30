@@ -1,5 +1,5 @@
 # Template file for 'zig'
-pkgname=wlroots
+pkgname=zig
 version=0.16
 revision=1
 metapackage=yes
