@@ -139,7 +139,8 @@ jobs:
         run: |
           mkdir -p hostdir/binpkgs
           xbps-rindex -a hostdir/binpkgs/*.xbps 2>/dev/null || true
-          echo "XBPS_LOCAL_REPOS=hostdir/binpkgs" >> etc/conf
+          mkdir -p masterdir/etc/xbps.d
+          echo "repository=$(pwd)/hostdir/binpkgs" > masterdir/etc/xbps.d/00-local.conf
 
       - name: Install cross-compiler
         if: matrix.cross_arch != ''
