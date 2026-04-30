@@ -11,6 +11,8 @@ license="MIT"
 homepage="https://bun.sh"
 nostrip=yes
 nopie=yes
+nodebug=yes
+ignore_elf_files="usr/bin/bun"
 
 case "$XBPS_TARGET_MACHINE" in
 x86_64)
