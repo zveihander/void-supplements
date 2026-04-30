@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>packages — void supplements</title>
+    <style>
+      :root {
+        --bg: #3f3f3f;
+        --bg-1: #2b2b2b;
+        --bg-2: #383838;
+        --fg: #dcdccc;
+        --fg-dim: #8f8f8f;
+        --yellow: #e8ae5b;
+        --green: #7f9f7f;
+        --red: #cc9393;
+        --blue: #8cd0d3;
+        --purple: #c0bed1;
+        --orange: #dfaf8f;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--bg-1);
+        color: var(--fg);
+        font-family: "Terminus", "Lucida Console", "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        max-width: 840px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+        color: var(--yellow);
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--bg-2);
+        margin: 1.5rem 0;
+      }
+
+      #header {
+        border-bottom: 1px solid var(--fg-dim);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      #header h1 {
+        color: var(--yellow);
+        font-size: 1.2rem;
+        font-weight: normal;
+        letter-spacing: 0.04em;
+      }
+      #header h1 span {
+        color: var(--fg-dim);
+      }
+      #header p {
+        color: var(--fg-dim);
+        margin-top: 0.2rem;
+        font-size: 0.9rem;
+      }
+
+      h2 {
+        color: var(--orange);
+        font-size: 0.85rem;
+        font-weight: normal;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.7rem;
+      }
+
+      /* ── search bar ── */
+      #search-row {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      #search {
+        flex: 1;
+        min-width: 180px;
+        background: var(--bg-2);
+        border: 1px solid var(--fg-dim);
+        color: var(--fg);
+        font-family: inherit;
+        font-size: 0.88rem;
+        padding: 0.3rem 0.6rem;
+        outline: none;
+      }
+      #search:focus {
+        border-color: var(--yellow);
+      }
+      #search::placeholder {
+        color: var(--fg-dim);
+      }
+
+      .arch-filter {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .arch-btn {
+        background: var(--bg-2);
+        border: 1px solid var(--fg-dim);
+        color: var(--fg-dim);
+        font-family: inherit;
+        font-size: 0.78rem;
+        padding: 0.2rem 0.5rem;
+        cursor: pointer;
+        transition: none;
+      }
+      .arch-btn:hover {
+        border-color: var(--fg);
+        color: var(--fg);
+      }
+      .arch-btn.active {
+        border-color: var(--green);
+        color: var(--green);
+      }
+
+      #stats {
+        font-size: 0.82rem;
+        color: var(--fg-dim);
+        margin-bottom: 0.8rem;
+      }
+      #stats span {
+        color: var(--yellow);
+      }
+
+      #pkg-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+      }
+
+      .pkg-row {
+        border-bottom: 1px solid var(--bg-2);
+        padding: 0.55rem 0;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        gap: 0 1rem;
+        align-items: start;
+      }
+      .pkg-row:hover {
+        background: var(--bg-2);
+        padding-left: 0.4rem;
+      }
+      .pkg-row.open {
+        background: var(--bg-2);
+        padding-left: 0.4rem;
+      }
+
+      .pkg-name {
+        color: var(--blue);
+        font-size: 0.92rem;
+      }
+      .pkg-ver {
+        color: var(--fg-dim);
+        font-size: 0.82rem;
+      }
+      .pkg-archs {
+        text-align: right;
+        font-size: 0.78rem;
+        display: flex;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .arch-tag {
+        color: var(--green);
+        border: 1px solid var(--green);
+        padding: 0 0.3rem;
+        font-size: 0.74rem;
+        opacity: 0.75;
+      }
+
+      .pkg-detail {
+        display: none;
+        grid-column: 1 / -1;
+        margin-top: 0.5rem;
+        padding: 0.6rem 0.8rem;
+        background: var(--bg-1);
+        border-left: 2px solid var(--fg-dim);
+        font-size: 0.85rem;
+      }
+      .pkg-detail.visible {
+        display: block;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 0.1rem 1.2rem;
+      }
+      .detail-grid .k {
+        color: var(--fg-dim);
+      }
+      .detail-grid .v {
+        color: var(--fg);
+        word-break: break-all;
+      }
+      .detail-grid .v a {
+        color: var(--blue);
+      }
+
+      .detail-arch-section {
+        margin-top: 0.6rem;
+      }
+      .detail-arch-section h3 {
+        color: var(--purple);
+        font-size: 0.78rem;
+        font-weight: normal;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+      }
+      .detail-arch-row {
+        display: grid;
+        grid-template-columns: max-content 1fr max-content;
+        gap: 0.1rem 1rem;
+        font-size: 0.82rem;
+        border-bottom: 1px solid var(--bg-2);
+        padding: 0.2rem 0;
+      }
+      .detail-arch-row:last-child {
+        border-bottom: none;
+      }
+      .detail-arch-row .arch-name {
+        color: var(--green);
+      }
+      .detail-arch-row .arch-size {
+        color: var(--fg-dim);
+        text-align: right;
+      }
+
+      #loading,
+      #empty {
+        color: var(--fg-dim);
+        font-size: 0.88rem;
+        padding: 1rem 0;
+      }
+
+      footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--bg-2);
+        color: var(--fg-dim);
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>
+        [ <span>zveihander/</span>void-supplements / <span>packages</span> ]
+      </h1>
+      <p><a href="./index.html">home</a></p>
+    </div>
+
+    <div id="search-row">
+      <input
+        id="search"
+        type="text"
+        placeholder="search packages..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="arch-filter" id="arch-filter">
+        <!-- injected -->
+      </div>
+    </div>
+
+    <div id="stats">loading...</div>
+    <div id="loading">fetching packages.json...</div>
+    <div id="empty" style="display: none">no packages match</div>
+    <div id="pkg-list"></div>
+
+    <footer>
+      <a href="./index.html">home</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://github.com/zveihander/void-supplements">source</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://github.com/zveihander/void-supplements/releases"
+        >releases</a
+      >
+      &nbsp;&middot;&nbsp;
+      <a href="https://voidlinux.org">void linux</a>
+    </footer>
+
+    <script>
+      (function () {
+        let allPkgs = []; // raw JSON array
+        let grouped = {}; // { pkgname: { versions: Set, archs: [{arch,ver,size,url,filename}] } }
+        let activeArch = ""; // "" = all
+        let query = "";
+        let openPkg = null;
+
+        function fmtSize(bytes) {
+          if (bytes < 1024) return bytes + " B";
+          if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KiB";
+          return (bytes / 1048576).toFixed(1) + " MiB";
+        }
+
+        function escHtml(s) {
+          return s
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        function groupPackages(pkgs) {
+          const g = {};
+          for (const p of pkgs) {
+            if (!g[p.name]) g[p.name] = { archs: [] };
+            g[p.name].archs.push(p);
+          }
+          return g;
+        }
+
+        function render() {
+          const list = document.getElementById("pkg-list");
+          const stats = document.getElementById("stats");
+          const empty = document.getElementById("empty");
+
+          const q = query.toLowerCase().trim();
+
+          const names = Object.keys(grouped)
+            .filter((name) => {
+              if (q && !name.toLowerCase().includes(q)) return false;
+              if (activeArch) {
+                return grouped[name].archs.some((a) => a.arch === activeArch);
+              }
+              return true;
+            })
+            .sort();
+
+          stats.innerHTML = `showing <span>${names.length}</span> of <span>${Object.keys(grouped).length}</span> packages`;
+          empty.style.display = names.length === 0 ? "block" : "none";
+
+          list.innerHTML = "";
+          for (const name of names) {
+            const entry = grouped[name];
+
+            const archs = activeArch
+              ? entry.archs.filter((a) => a.arch === activeArch)
+              : entry.archs;
+
+            const ver = archs
+              .map((a) => a.version)
+              .sort()
+              .slice(-1)[0];
+
+            const row = document.createElement("div");
+            row.className = "pkg-row" + (openPkg === name ? " open" : "");
+            row.dataset.name = name;
+
+            const archTags = [...new Set(archs.map((a) => a.arch))]
+              .map((a) => `<span class="arch-tag">${escHtml(a)}</span>`)
+              .join("");
+
+            row.innerHTML = `
+            <div>
+              <span class="pkg-name">${escHtml(name)}</span>
+              <span class="pkg-ver"> ${escHtml(ver)}</span>
+            </div>
+            <div class="pkg-archs">${archTags}</div>
+            <div class="pkg-detail${openPkg === name ? " visible" : ""}" id="detail-${escHtml(name)}">
+              ${renderDetail(name, archs)}
+            </div>`;
+
+            row.addEventListener("click", function (e) {
+              if (e.target.tagName === "A") return;
+              if (openPkg === name) {
+                openPkg = null;
+              } else {
+                openPkg = name;
+              }
+              render();
+            });
+
+            list.appendChild(row);
+          }
+        }
+
+        function renderDetail(name, archs) {
+          const rows = archs
+            .map(
+              (a) => `
+          <div class="detail-arch-row">
+            <span class="arch-name">${escHtml(a.arch)}</span>
+            <span><a href="${escHtml(a.url)}">${escHtml(a.filename)}</a></span>
+            <span class="arch-size">${fmtSize(a.size)}</span>
+          </div>`,
+            )
+            .join("");
+
+          return `
+          <div class="detail-grid">
+            <span class="k">package</span> <span class="v">${escHtml(name)}</span>
+            <span class="k">version</span>  <span class="v">${escHtml(archs[0].version)}</span>
+          </div>
+          <div class="detail-arch-section">
+            <h3>downloads</h3>
+            ${rows}
+          </div>
+          <div style="margin-top:0.6rem;font-size:0.82rem;color:var(--fg-dim)">
+            install: <code style="background:var(--bg-2);padding:0.1rem 0.3rem">sudo xbps-install -S ${escHtml(name)}</code>
+          </div>`;
+        }
+
+        function buildArchButtons(archs) {
+          const container = document.getElementById("arch-filter");
+          container.innerHTML = "";
+
+          const all = document.createElement("button");
+          all.className = "arch-btn" + (activeArch === "" ? " active" : "");
+          all.textContent = "all";
+          all.addEventListener("click", () => {
+            activeArch = "";
+            buildArchButtons(archs);
+            render();
+          });
+          container.appendChild(all);
+
+          for (const arch of archs) {
+            const btn = document.createElement("button");
+            btn.className = "arch-btn" + (activeArch === arch ? " active" : "");
+            btn.textContent = arch;
+            btn.addEventListener("click", () => {
+              activeArch = arch;
+              buildArchButtons(archs);
+              render();
+            });
+            container.appendChild(btn);
+          }
+        }
+
+        document
+          .getElementById("search")
+          .addEventListener("input", function () {
+            query = this.value;
+            openPkg = null;
+            render();
+          });
+
+        fetch("./packages.json")
+          .then((r) => {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then((data) => {
+            document.getElementById("loading").style.display = "none";
+            allPkgs = data;
+            grouped = groupPackages(data);
+
+            const archs = [...new Set(data.map((p) => p.arch))].sort();
+            buildArchButtons(archs);
+            render();
+          })
+          .catch((err) => {
+            document.getElementById("loading").textContent =
+              "error loading packages.json: " +
+              err.message +
+              " — has the CI run at least once?";
+          });
+      })();
+    </script>
+  </body>
+</html>

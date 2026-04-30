@@ -396,6 +396,32 @@ jobs:
 
           sed -i "s|<!-- ARCH_ROWS_PLACEHOLDER -->|${ARCH_ROWS}|g" pages/index.html || true
 
+      - name: Generate packages.json
+        run: |
+          printf '[\n' > pages/packages.json
+          FIRST=1
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
+            for pkg in "$arch_dir"*.xbps; do
+              [ -f "$pkg" ] || continue
+              fname="$(basename "$pkg")"
+              base="${fname%.xbps}"
+              pkgarch="${base##*.}"
+              verrev="${base%.*}"
+              pkgname="$(echo "$verrev" | sed 's/-[0-9].*//')"
+              version="$(echo "$verrev" | sed "s/^${pkgname}-//")"
+              size="$(stat -c%s "$pkg")"
+              TAG="${arch}"
+              url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/${fname}"
+              [ "$FIRST" -eq 1 ] && FIRST=0 || printf ',\n' >> pages/packages.json
+              printf '  {"name":"%s","version":"%s","arch":"%s","filename":"%s","size":%s,"url":"%s"}' \
+                "$pkgname" "$version" "$arch" "$fname" "$size" "$url" >> pages/packages.json
+            done
+          done
+          printf '\n]\n' >> pages/packages.json
+          echo "packages.json generated:"
+          cat pages/packages.json
+
       - name: Deploy landing page to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
