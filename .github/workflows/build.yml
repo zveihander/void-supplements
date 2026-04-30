@@ -134,6 +134,13 @@ jobs:
             ./xbps-src binary-bootstrap
           fi
 
+      - name: Register local binpkgs as a repository
+        working-directory: /void-packages
+        run: |
+          mkdir -p hostdir/binpkgs
+          xbps-rindex -a hostdir/binpkgs/*.xbps 2>/dev/null || true
+          echo "XBPS_LOCAL_REPOS=hostdir/binpkgs" >> etc/conf
+
       - name: Install cross-compiler
         if: matrix.cross_arch != ''
         working-directory: /void-packages
@@ -155,6 +162,39 @@ jobs:
             xbps-install -y "cross-${TRIPLE}" || true
           fi
 
+      - name: Determine build order
+        run: |
+          xbps-rindex -a /void-packages/hostdir/binpkgs/*.xbps 2>/dev/null || true
+
+          ORDER_FILE="${GITHUB_WORKSPACE}/build_order.txt"
+          > "$ORDER_FILE"
+
+          for pkg_dir in "${GITHUB_WORKSPACE}"/packages/*/; do
+            pkg_name="$(basename "$pkg_dir")"
+            deps="$(grep '^depends=' "$pkg_dir/template" 2>/dev/null | sed 's/depends=//;s/"//g')"
+            is_meta=false
+            for dep in $deps; do
+              dep_name="${dep%%[><=]*}"
+              if [ -d "${GITHUB_WORKSPACE}/packages/${dep_name}" ]; then
+                is_meta=true
+                break
+              fi
+            done
+            if [ "$is_meta" = "false" ]; then
+              echo "$pkg_name" >> "$ORDER_FILE"
+            fi
+          done
+
+          for pkg_dir in "${GITHUB_WORKSPACE}"/packages/*/; do
+            pkg_name="$(basename "$pkg_dir")"
+            if ! grep -qx "$pkg_name" "$ORDER_FILE"; then
+              echo "$pkg_name" >> "$ORDER_FILE"
+            fi
+          done
+
+          echo "Build order:"
+          cat "$ORDER_FILE"
+
       - name: Build packages
         working-directory: /void-packages
         run: |
@@ -164,8 +204,8 @@ jobs:
           FAILED_PKGS=""
           BUILT_COUNT=0
 
-          for pkg_dir in /void-packages/srcpkgs/*/; do
-            pkg_name="$(basename "$pkg_dir")"
+          while IFS= read -r pkg_name; do
+            pkg_dir="/void-packages/srcpkgs/${pkg_name}/"
 
             if [ ! -f "${GITHUB_WORKSPACE}/packages/${pkg_name}/template" ]; then
               continue
@@ -222,23 +262,24 @@ jobs:
             echo "Running: $BUILD_CMD"
             EXISTING=$(find /void-packages/hostdir/binpkgs -name "${pkg_name}-*.xbps" 2>/dev/null | head -1)
             if [ -n "$EXISTING" ]; then
-              echo "$pkg_name already built (cached): $(basename "$EXISTING")"
+              echo "⏭  $pkg_name already built (cached): $(basename "$EXISTING")"
               BUILT_COUNT=$((BUILT_COUNT + 1))
             elif eval "$BUILD_CMD"; then
               echo "✔ Built $pkg_name successfully"
               BUILT_COUNT=$((BUILT_COUNT + 1))
+              xbps-rindex -a /void-packages/hostdir/binpkgs/*.xbps 2>/dev/null || true
             else
               echo "✘ FAILED: $pkg_name"
               FAILED_PKGS="$FAILED_PKGS $pkg_name"
             fi
-          done
+          done < "${GITHUB_WORKSPACE}/build_order.txt"
 
           echo ""
           echo "Build summary for $TARGET:"
           echo "  Built: $BUILT_COUNT packages"
           if [ -n "$FAILED_PKGS" ]; then
             echo "  Failed:$FAILED_PKGS"
-          fie
+          fi
 
       - name: Save xbps-src cache
         if: always()

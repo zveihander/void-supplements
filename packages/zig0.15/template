@@ -9,7 +9,6 @@ maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
 license="MIT"
 homepage="https://ziglang.org/"
 nopie=yes
-nocross=yes
 
 case "$XBPS_TARGET_MACHINE" in
 x86_64)
