@@ -2,7 +2,7 @@
 pkgname=zig0.15
 version=0.15.2
 revision=1
-archs="x86_64 aarch64 armv7l i686"
+archs="x86_64 x86_64-musl aarch64 aarch64-musl armv7l armv7l-musl i686"
 conflicts="zig0.16"
 short_desc="Programming language designed for robustness, optimality, and clarity"
 maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
@@ -11,17 +11,17 @@ homepage="https://ziglang.org/"
 nopie=yes
 
 case "$XBPS_TARGET_MACHINE" in
-x86_64)
+x86_64 | x86_64-musl)
     distfiles="https://ziglang.org/download/${version}/zig-x86_64-linux-${version}.tar.xz"
     checksum=02aa270f183da276e5b5920b1dac44a63f1a49e55050ebde3aecc9eb82f93239
     _zigarch="x86_64"
     ;;
-aarch64)
+aarch64 | aarch64-musl)
     distfiles="https://ziglang.org/download/${version}/zig-aarch64-linux-${version}.tar.xz"
     checksum=958ed7d1e00d0ea76590d27666efbf7a932281b3d7ba0c6b01b0ff26498f667f
     _zigarch="aarch64"
     ;;
-armv7l)
+armv7l | armv7l-musl)
     distfiles="https://ziglang.org/download/${version}/zig-arm-linux-${version}.tar.xz"
     checksum=7d8401495065dae45d6249c68d5faf10508f8203c86362ccb698aeaafc66b7cd
     _zigarch="arm"

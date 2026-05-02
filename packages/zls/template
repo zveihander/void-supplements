@@ -2,7 +2,7 @@
 pkgname=zls
 version=0.16.0
 revision=1
-archs="x86_64 aarch64 armv7l i686 x86_64-musl aarch64-musl"
+archs="x86_64 aarch64 armv7l i686 x86_64-musl aarch64-musl armv7l-musl"
 metapackage=yes
 depends="zls0.16"
 short_desc="Zig language server"
