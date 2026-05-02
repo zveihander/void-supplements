@@ -1,0 +1,53 @@
+# Template file for 'shellcheck'
+pkgname=shellcheck
+version=0.11.0
+revision=1
+archs="x86_64 x86_64-musl aarch64 aarch64-musl armv6l armv6l-musl"
+hostmakedepends="tar xz go-md2man"
+short_desc="Static analysis tool for shell scripts"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="GPL-3.0-only"
+homepage="https://www.shellcheck.net"
+nostrip=yes
+nopie=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64 | x86_64-musl)
+    distfiles="https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.x86_64.tar.xz
+	 https://raw.githubusercontent.com/koalaman/shellcheck/v${version}/shellcheck.1.md>shellcheck.1.md"
+    checksum="8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198
+	 c0d0e077db2a877ed40c612b67aef336dfbd78f1aa1d5efbef6e8dc5fd160f03"
+    _arch_dir="shellcheck-v${version}"
+    ;;
+aarch64 | aarch64-musl)
+    distfiles="https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.aarch64.tar.xz
+	 https://raw.githubusercontent.com/koalaman/shellcheck/v${version}/shellcheck.1.md>shellcheck.1.md"
+    checksum="12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588
+	 c0d0e077db2a877ed40c612b67aef336dfbd78f1aa1d5efbef6e8dc5fd160f03"
+    _arch_dir="shellcheck-v${version}"
+    ;;
+armv6l | armv6l-musl)
+    distfiles="https://github.com/koalaman/shellcheck/releases/download/v${version}/shellcheck-v${version}.linux.armv6hf.tar.xz
+	 https://raw.githubusercontent.com/koalaman/shellcheck/v${version}/shellcheck.1.md>shellcheck.1.md"
+    checksum="8afc50b302d5feeac9381ea114d563f0150d061520042b254d6eb715797c8223
+	 c0d0e077db2a877ed40c612b67aef336dfbd78f1aa1d5efbef6e8dc5fd160f03"
+    _arch_dir="shellcheck-v${version}"
+    ;;
+esac
+
+pre_configure() {
+    go-md2man -in ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck.1.md \
+        -out ${wrksrc}/shellcheck.1
+}
+
+do_extract() {
+    mkdir -p ${wrksrc}
+    tar -xJf ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck-v${version}.linux.*.tar.xz \
+        -C ${wrksrc}
+}
+
+do_install() {
+    vbin ${wrksrc}/${_arch_dir}/shellcheck shellcheck
+    vman ${wrksrc}/shellcheck.1
+    vlicense ${wrksrc}/${_arch_dir}/LICENSE.txt
+}
