@@ -1,0 +1,13 @@
+# Template file for 'zls'
+pkgname=zls
+version=0.16.0
+revision=1
+archs="x86_64 aarch64 armv7l i686 x86_64-musl aarch64-musl"
+metapackage=yes
+depends="zls0.16"
+short_desc="Zig language server"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://github.com/zigtools/zls"
+
+short_desc+=" (metapackage)"

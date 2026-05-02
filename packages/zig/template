@@ -1,0 +1,13 @@
+# Template file for 'zig'
+pkgname=zig
+version=0.16.0
+revision=1
+archs="x86_64 aarch64 armv7l i686"
+metapackage=yes
+depends="zig0.16"
+short_desc="Programming language designed for robustness, optimality, and clarity"
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://ziglang.org/"
+
+short_desc+=" (metapackage)"
