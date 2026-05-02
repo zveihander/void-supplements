@@ -41,7 +41,7 @@ pre_configure() {
 
 do_extract() {
     mkdir -p ${wrksrc}
-    tar -xJf ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck-v${version}.linux.*.tar.xz \
+    tar --no-same-owner -xJf ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck-v${version}.linux.*.tar.xz \
         -C ${wrksrc}
 }
 
