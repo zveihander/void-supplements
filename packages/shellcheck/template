@@ -35,14 +35,14 @@ armv6l | armv6l-musl)
     ;;
 esac
 
-pre_configure() {
-    pandoc -s -f markdown-smart -t man shellcheck.1.md -o shellcheck.1
-}
-
 do_extract() {
     mkdir -p ${wrksrc}
     tar --no-same-owner -xJf ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck-v${version}.linux.*.tar.xz \
         -C ${wrksrc}
+}
+
+pre_configure() {
+    pandoc -s -f markdown-smart -t man ${XBPS_SRCDISTDIR}/${pkgname}-${version}/shellcheck.1.md -o ${wrksrc}/shellcheck.1
 }
 
 do_install() {
