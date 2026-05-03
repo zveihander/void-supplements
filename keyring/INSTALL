@@ -125,7 +125,7 @@ fi
 echo "  ${GRN}✓${RST} Config written."
 echo ""
 
-echo "  Syncing repository index ..."
+echo "  Syncing repository index..."
 if xbps-install -S >/dev/null 2>&1; then
   echo "  ${GRN}✓${RST} Repository reachable and index synced."
 else
