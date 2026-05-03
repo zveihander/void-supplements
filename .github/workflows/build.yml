@@ -4,8 +4,9 @@ on:
     branches:
       - master
     paths:
-      - "packages/**"
       - ".github/workflows/build.yml"
+      - "packages/**"
+      - "keyring/**"
   workflow_dispatch:
 concurrency:
   group: publish
