@@ -500,7 +500,7 @@ jobs:
       - name: Install build tools
         run: |
           xbps-install -Syu xbps
-          xbps-install -yu git ca-certificates
+          xbps-install -yu git ca-certificates github-cli
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build keyring package

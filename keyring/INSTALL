@@ -46,10 +46,10 @@ REPO_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${REPO
 CONF_FILE="/etc/xbps.d/00-master-void-supplements.conf"
 
 echo ""
-echo "${BOLD}${CYN}  ╔════════════════════════════════════════════════════╗${RST}"
-echo "${BOLD}${CYN}  ║               void-supplements                     ║${RST}"
-echo "${BOLD}${CYN}  ║    github.com/zveihander/void-supplements          ║${RST}"
-echo "${BOLD}${CYN}  ╚════════════════════════════════════════════════════╝${RST}"
+echo "${BOLD}${CYN}  ╔════════════════════════════════════════════════════╗ ${RST}"
+echo "${BOLD}${CYN}  ║               void-supplements                     ║ ${RST}"
+echo "${BOLD}${CYN}  ║    github.com/zveihander/void-supplements          ║ ${RST}"
+echo "${BOLD}${CYN}  ╚════════════════════════════════════════════════════╝ ${RST}"
 echo ""
 
 echo "${BOLD}  This installer will:${RST}"
