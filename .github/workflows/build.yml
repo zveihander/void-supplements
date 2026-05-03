@@ -509,6 +509,10 @@ jobs:
           XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
           SIGN_BY: ${{ secrets.SIGN_BY }}
         run: |
+
+          export XBPS_PASSPHRASE="$XBPS_PASSPHRASE"
+          export XBPS_TARGET_ARCH="noarch"
+
           PRIVKEY_FILE="$(mktemp /tmp/privkey.XXXXXX.pem)"
           printf '%s' "$PRIVATE_KEY" > "$PRIVKEY_FILE"
           chmod 600 "$PRIVKEY_FILE"
@@ -540,10 +544,10 @@ jobs:
             "${PKGVER}.noarch.xbps"
 
           xbps-rindex -a "${PKGVER}.noarch.xbps"
-          XBPS_TARGET_ARCH=noarch xbps-rindex \
+          xbps-rindex \
             --privkey "$PRIVKEY_FILE" \
-            --sign \
             --signedby "$SIGN_BY" \
+            --sign \
             .
 
           rm -f "$PRIVKEY_FILE"
