@@ -1,0 +1,146 @@
+#!/bin/sh
+
+ACTION="$1"
+
+[ "$ACTION" = "post" ] || exit 0
+
+BOLD="\033[1m"
+DIM="\033[2m"
+RED="\033[1;31m"
+YLW="\033[1;33m"
+GRN="\033[1;32m"
+CYN="\033[1;36m"
+WHT="\033[1;37m"
+RST="\033[0m"
+
+_arch="$(uname -m)"
+_libc=""
+if ldd --version 2>&1 | grep -qi musl; then
+  _libc="-musl"
+fi
+
+case "$_arch" in
+x86_64) REPOARCH="x86_64${_libc}" ;;
+i686) REPOARCH="i686" ;;
+aarch64) REPOARCH="aarch64${_libc}" ;;
+armv6l) REPOARCH="armv6l${_libc}" ;;
+armv7l) REPOARCH="armv7l${_libc}" ;;
+*)
+  echo ""
+  echo "${RED}${BOLD}  ERROR:${RST} Unsupported architecture: ${BOLD}${_arch}${RST}"
+  echo ""
+  echo "  void-supplements does not publish packages for '${_arch}'."
+  echo "  Supported: x86_64, x86_64-musl, i686, aarch64, aarch64-musl,"
+  echo "             armv6l, armv6l-musl, armv7l, armv7l-musl"
+  echo ""
+  echo "  Please open an issue if you'd like support for your architecture:"
+  echo "  ${CYN}https://github.com/zveihander/void-supplements/issues${RST}"
+  echo ""
+  exit 1
+  ;;
+esac
+
+REPO_OWNER="zveihander"
+REPO_NAME="void-supplements"
+REPO_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${REPOARCH}"
+CONF_FILE="/etc/xbps.d/00-master-void-supplements.conf"
+
+echo ""
+echo "${BOLD}${CYN}  ╔════════════════════════════════════════════════════╗${RST}"
+echo "${BOLD}${CYN}  ║               void-supplements                     ║${RST}"
+echo "${BOLD}${CYN}  ║    github.com/zveihander/void-supplements          ║${RST}"
+echo "${BOLD}${CYN}  ╚════════════════════════════════════════════════════╝${RST}"
+echo ""
+
+echo "${BOLD}  This installer will:${RST}"
+echo ""
+echo "  ${GRN}✓${RST} Trust the void-supplements signing key"
+echo "    ${DIM}(already placed in /var/db/xbps/keys/ by xbps)${RST}"
+echo ""
+echo "  ${GRN}→${RST} Write repository config to:  ${BOLD}${CONF_FILE}${RST}"
+echo "    ${DIM}repository=${REPO_URL}${RST}"
+echo ""
+echo "  ${GRN}→${RST} Detected system:  ${BOLD}${REPOARCH}${RST}"
+echo ""
+
+echo "${YLW}${BOLD}    IMPORTANT — please read before continuing:${RST}"
+echo ""
+echo "${YLW}  • This is a THIRD-PARTY repository, unaffiliated with the"
+echo "    official Void Linux project.${RST}"
+echo ""
+echo "${YLW}  • ALWAYS look over the source code for a package template"
+echo "    before installing it! If you choose not to audit the source code"
+echo "    of a random template you found online, you really have no excuse"
+echo "    if your system gets compromised. See here to see the template souces:"
+echo "    ${CYN}https://github.com/${REPO_OWNER}/${REPO_NAME}${RST}"
+echo ""
+echo "${YLW}  • When a package exists in both the official Void repos and"
+echo "    void-supplements, void-supplements will take priority as it will"
+echo "    likely have the more up-to-date version. By using this repository,"
+echo "    you are accepting the fact that things may, though very unlikely,"
+echo "    occasionally break due to unmatched dependencies.${RST}"
+echo ""
+echo "${YLW}  • To revert back to before you had installed void-supplements,"
+echo "    run:${RST}"
+echo "    ${BOLD}xbps-remove repo-void-supplements${RST}"
+echo "    ${BOLD}rm -f ${CONF_FILE}${RST}"
+echo ""
+
+printf "  Add void-supplements to your repository list? [y/N] "
+read -r _reply
+echo ""
+
+case "$_reply" in
+[yY] | [yY][eE][sS]) ;;
+*)
+  echo "  ${YLW}Aborted.${RST} No repository config was written."
+  echo ""
+  echo "  The signing key was already installed by xbps."
+  echo "  To remove it along with this package, run:"
+  echo "    ${BOLD}xbps-remove repo-void-supplements${RST}"
+  echo ""
+  exit 0
+  ;;
+esac
+
+echo "  Writing ${BOLD}${CONF_FILE}${RST} ..."
+mkdir -p /etc/xbps.d
+
+cat >"$CONF_FILE" <<EOF
+# void-supplements
+# https://github.com/${REPO_OWNER}/${REPO_NAME}
+#
+# Arch:      ${REPOARCH}
+# Installed: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+repository=${REPO_URL}
+EOF
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "  ${RED}${BOLD}ERROR:${RST} Could not write ${CONF_FILE}"
+  echo "  Make sure you are running xbps-install as root."
+  exit 1
+fi
+
+echo "  ${GRN}✓${RST} Config written."
+echo ""
+
+echo "  Syncing repository index ..."
+if xbps-install -S >/dev/null 2>&1; then
+  echo "  ${GRN}✓${RST} Repository reachable and index synced."
+else
+  echo "  ${YLW}WARNING:${RST}  Could not sync index (maybe a network issue?)."
+  echo "     Run ${BOLD}xbps-install -S${RST} manually when you have connectivity."
+fi
+echo ""
+
+echo "  ${GRN}${BOLD}All done!${RST} void-supplements is now active."
+echo ""
+echo "  To sync and upgrade all packages:"
+echo "    ${BOLD}xbps-install -Su${RST}"
+echo ""
+echo "  void-supplements packages will take priority where versions"
+echo "  conflict with official Void repos."
+echo ""
+echo "  To see a full list of available packages, see"
+echo "  https://zveihander.github.io/void-supplements/packages.html"

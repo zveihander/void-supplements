@@ -433,7 +433,7 @@ jobs:
             gh release create "$TAG" \
               --repo "$GITHUB_REPOSITORY" \
               --title "${arch}" \
-              --notes "An XBPS binary repository for \`${arch}\`. To enable, create a new file at \`/etc/xbps.d/90-void-supplements.conf\` with the contents  \`repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}\`" \
+              --notes "An XBPS binary repository for \`${arch}\`." \
               --prerelease \
               $FILES
 
@@ -506,3 +506,111 @@ jobs:
           keep_files: false
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
+
+  publish-keyring:
+    name: Build and publish keyring bootstrap package
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      contains(join(github.event.commits.*.modified, ' '), 'keyring/')
+    needs: []
+    permissions:
+      contents: write
+
+    container:
+      image: ghcr.io/void-linux/void-glibc-full:latest
+      options: --privileged
+
+    steps:
+      - name: Install build tools
+        run: |
+          xbps-install -Syu xbps
+          xbps-install -yu git ca-certificates
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build keyring package
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
+          SIGN_BY: ${{ secrets.SIGN_BY }}
+        run: |
+          PRIVKEY_FILE="$(mktemp /tmp/privkey.XXXXXX.pem)"
+          printf '%s' "$PRIVATE_KEY" > "$PRIVKEY_FILE"
+          chmod 600 "$PRIVKEY_FILE"
+
+          STAGE="$(mktemp -d)"
+          mkdir -p "${STAGE}/var/db/xbps/keys"
+
+          cp keyring/void-supplements.pub.plist \
+             "${STAGE}/var/db/xbps/keys/void-supplements.pub.plist"
+
+          cp keyring/INSTALL "${STAGE}/INSTALL"
+          chmod +x "${STAGE}/INSTALL"
+
+          PKGNAME="repo-void-supplements"
+          PKGVER="${PKGNAME}-1.0_1"
+
+          xbps-create \
+            --architecture noarch \
+            --pkgver        "${PKGVER}" \
+            --desc          "enable the void-supplements repository" \
+            --homepage      "https://github.com/${GITHUB_REPOSITORY}" \
+            --license       "MIT" \
+            --maintainer    "${SIGN_BY}" \
+            --install-script "${STAGE}/INSTALL" \
+            "$STAGE"
+
+          xbps-rindex \
+            --privkey "$PRIVKEY_FILE" \
+            --sign-pkg \
+            "${PKGVER}.noarch.xbps"
+
+          xbps-rindex -a "${PKGVER}.noarch.xbps"
+          XBPS_TARGET_ARCH=noarch xbps-rindex \
+            --privkey "$PRIVKEY_FILE" \
+            --sign \
+            --signedby "$SIGN_BY" \
+            .
+
+          rm -f "$PRIVKEY_FILE"
+          echo "PKGVER=${PKGVER}" >> "$GITHUB_ENV"
+
+      - name: Publish to GitHub Releases (bootstrap tag)
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="bootstrap"
+
+          gh release delete "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --yes 2>/dev/null || true
+
+          cat <<EOF > release_notes.md
+          ## void-supplements bootstrap package
+
+          Install this once to add the void-supplements repository to your Void Linux system.
+
+          \`\`\`sh
+          sudo xbps-install \\
+            --repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/bootstrap \\
+            ${{ env.PKGNAME }}
+          \`\`\`
+
+          The post-install script will:
+          - Trust the signing key
+          - Detect your architecture
+          - Write \`/etc/xbps.d/00-master-void-supplements.conf\`
+          - Give void-supplements package priority over the official repositories
+
+          **To remove:** \`xbps-remove ${{ env.PKGNAME }} && rm /etc/xbps.d/00-master-void-supplements.conf\`
+          EOF
+
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Repository Bootstrap" \
+            --notes-file release_notes.md \
+            --prerelease \
+            "${{ env.PKGVER }}.noarch.xbps" \
+            noarch-repodata
