@@ -485,7 +485,7 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com"
   publish-keyring:
     name: Build and publish keyring bootstrap package
-    needs: []
+    needs: check-changes
     if: |
       github.event_name == 'workflow_dispatch' ||
       needs.check-changes.outputs.keyring_changed == 'true'
