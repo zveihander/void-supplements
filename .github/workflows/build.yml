@@ -1,5 +1,4 @@
 name: Build and Publish XBPS Repository
-
 on:
   push:
     branches:
@@ -8,16 +7,25 @@ on:
       - "packages/**"
       - ".github/workflows/build.yml"
   workflow_dispatch:
-
 concurrency:
   group: publish
   cancel-in-progress: true
-
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      keyring: ${{ steps.filter.outputs.keyring }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            keyring:
+              - 'keyring/**'
   build:
     name: Build — ${{ matrix.target }}
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
@@ -26,51 +34,41 @@ jobs:
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: ""
             host_arch_flag: ""
-
           - target: x86_64-musl
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: ""
             host_arch_flag: "-A x86_64-musl"
-
           - target: aarch64
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "aarch64"
             host_arch_flag: ""
-
           - target: aarch64-musl
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "aarch64-musl"
             host_arch_flag: ""
-
           - target: armv6l
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "armv6l"
             host_arch_flag: ""
-
           - target: armv6l-musl
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "armv6l-musl"
             host_arch_flag: ""
-
           - target: armv7l
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "armv7l"
             host_arch_flag: ""
-
           - target: armv7l-musl
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: "armv7l-musl"
             host_arch_flag: ""
-
           - target: i686
             void_container: ghcr.io/void-linux/void-glibc-full:latest
             cross_arch: ""
             host_arch_flag: "-A i686"
-
     container:
       image: ${{ matrix.void_container }}
       options: --privileged
-
     steps:
       - name: Install base build tools
         run: |
@@ -92,18 +90,15 @@ jobs:
             bzip2 \
             zstd \
             openssl
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Clone void-packages
         run: |
           git clone --depth=1 \
             https://github.com/void-linux/void-packages.git \
             /void-packages
-
       - name: Restore xbps-src cache
         uses: actions/cache@v4
         with:
@@ -113,7 +108,6 @@ jobs:
           key: xbps-src-${{ matrix.target }}-${{ hashFiles('packages/**/template') }}
           restore-keys: |
             xbps-src-${{ matrix.target }}-
-
       - name: Bootstrap xbps-src
         working-directory: /void-packages
         run: |
@@ -125,7 +119,6 @@ jobs:
           else
             ./xbps-src binary-bootstrap
           fi
-
       - name: Copy package templates
         run: |
           for pkg_dir in packages/*/; do
@@ -134,7 +127,6 @@ jobs:
             rm -rf /void-packages/srcpkgs/"$pkg_name"
             cp -r "$pkg_dir" /void-packages/srcpkgs/"$pkg_name"
           done
-
       - name: Register local binpkgs and pin local packages
         working-directory: /void-packages
         run: |
@@ -149,7 +141,6 @@ jobs:
             echo ">> Pinning $pkg_name to build from local template"
             echo "ignorepkg=$pkg_name" >> masterdir/etc/xbps.d/00-local.conf
           done
-
       - name: Install cross-compiler
         if: matrix.cross_arch != ''
         working-directory: /void-packages
@@ -170,7 +161,6 @@ jobs:
           if [ -n "$TRIPLE" ]; then
             xbps-install -y "cross-${TRIPLE}" || true
           fi
-
       - name: Determine build order
         run: |
           xbps-rindex -a /void-packages/hostdir/binpkgs/*.xbps 2>/dev/null || true
@@ -203,7 +193,6 @@ jobs:
 
           echo "Build order:"
           cat "$ORDER_FILE"
-
       - name: Build packages
         working-directory: /void-packages
         run: |
@@ -289,7 +278,6 @@ jobs:
           if [ -n "$FAILED_PKGS" ]; then
             echo "  Failed:$FAILED_PKGS"
           fi
-
       - name: Save xbps-src cache
         if: always()
         uses: actions/cache/save@v4
@@ -298,7 +286,6 @@ jobs:
             /void-packages/hostdir/binpkgs
             /void-packages/masterdir
           key: xbps-src-${{ matrix.target }}-${{ hashFiles('packages/**/template') }}
-
       - name: Collect built packages
         run: |
           TARGET="${{ matrix.target }}"
@@ -331,7 +318,6 @@ jobs:
 
           PKG_COUNT="$(find "$STAGING" -name "*.xbps" | wc -l)"
           echo "Collected $PKG_COUNT package(s) for $TARGET"
-
       - name: Sign packages and index repository
         env:
           XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
@@ -373,7 +359,6 @@ jobs:
 
           echo "Done. Final staging contents:"
           ls -lh "$STAGING"
-
       - name: Upload staging artifact
         uses: actions/upload-artifact@v4
         with:
@@ -381,30 +366,25 @@ jobs:
           path: staging/${{ matrix.target }}/
           retention-days: 1
           if-no-files-found: warn
-
   publish:
     name: Publish to GitHub Pages
     runs-on: ubuntu-latest
     needs: build
     if: always()
-
     permissions:
       contents: write
-
     steps:
       - name: Checkout master branch
         uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 1
-
       - name: Download all staging artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: repo-*
           path: all-staging/
           merge-multiple: false
-
       - name: Upload packages to GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
@@ -439,14 +419,12 @@ jobs:
 
             echo "✔ $arch: uploaded"
           done
-
       - name: Checkout master for Pages landing page
         uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 1
           path: main-repo
-
       - name: Build and deploy landing page only
         run: |
           mkdir -p pages
@@ -470,7 +448,6 @@ jobs:
           done
 
           sed -i "s|<!-- ARCH_ROWS_PLACEHOLDER -->|${ARCH_ROWS}|g" pages/index.html || true
-
       - name: Generate packages.json
         run: |
           printf '[\n' > pages/packages.json
@@ -496,7 +473,6 @@ jobs:
           printf '\n]\n' >> pages/packages.json
           echo "packages.json generated:"
           cat pages/packages.json
-
       - name: Deploy landing page to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -506,30 +482,25 @@ jobs:
           keep_files: false
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
-
   publish-keyring:
     name: Build and publish keyring bootstrap package
-    runs-on: ubuntu-latest
+    needs: changes
     if: |
       github.event_name == 'workflow_dispatch' ||
-      contains(join(github.event.commits.*.modified, ' '), 'keyring/')
-    needs: []
+      needs.changes.outputs.keyring == 'true'
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-
     container:
       image: ghcr.io/void-linux/void-glibc-full:latest
       options: --privileged
-
     steps:
       - name: Install build tools
         run: |
           xbps-install -Syu xbps
           xbps-install -yu git ca-certificates
-
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Build keyring package
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
@@ -576,7 +547,6 @@ jobs:
 
           rm -f "$PRIVKEY_FILE"
           echo "PKGVER=${PKGVER}" >> "$GITHUB_ENV"
-
       - name: Publish to GitHub Releases (bootstrap tag)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
