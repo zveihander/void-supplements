@@ -24,7 +24,6 @@ jobs:
           filters: |
             keyring:
               - 'keyring/**'
-
   build:
     name: Build — ${{ matrix.target }}
     runs-on: ubuntu-latest
@@ -431,10 +430,11 @@ jobs:
         run: |
           mkdir -p pages
 
-          cp main-repo/index.html pages/index.html 2>/dev/null || true
-          cp main-repo/packages.html pages/packages.html 2>/dev/null || true
-          cp main-repo/favicon.svg pages/favicon.svg 2>/dev/null || true
-          cp main-repo/void-supplements.pub.pem pages/void-supplements.pub.pem 2>/dev/null || true
+          cp main-repo/site/index.html pages/index.html 2>/dev/null || true
+          cp main-repo/site/packages.html pages/packages.html 2>/dev/null || true
+          cp main-repo/site/assets/favicon.svg pages/favicon.svg 2>/dev/null || true
+          cp main-repo/keyring/void-supplements.pub.pem pages/void-supplements.pub.pem 2>/dev/null || true
+          cp main-repo/install.sh pages/install.sh 2>/dev/null || true
 
           REPO_OWNER="${GITHUB_REPOSITORY_OWNER}"
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
@@ -508,8 +508,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
           SIGN_BY: ${{ secrets.SIGN_BY }}
-        run: |
-
+        run: |2
           export XBPS_PASSPHRASE="$XBPS_PASSPHRASE"
           export XBPS_TARGET_ARCH="noarch"
 
@@ -522,9 +521,6 @@ jobs:
 
           cp keyring/void-supplements.pub.plist \
              "${STAGE}/var/db/xbps/keys/void-supplements.pub.plist"
-
-          cp keyring/INSTALL "${STAGE}/INSTALL"
-          chmod +x "${STAGE}/INSTALL"
 
           PKGNAME="repo-void-supplements"
           PKGVER="${PKGNAME}-1.0_1"
@@ -543,12 +539,18 @@ jobs:
             --sign-pkg \
             "${PKGVER}.noarch.xbps"
 
-          xbps-rindex -a "${PKGVER}.noarch.xbps"
-          xbps-rindex \
-            --privkey "$PRIVKEY_FILE" \
-            --signedby "$SIGN_BY" \
-            --sign \
-            .
+          for ARCH in x86_64 x86_64-musl i686 aarch64 aarch64-musl armv6l armv6l-musl armv7l armv7l-musl; do
+             mkdir -p "bootstrap-index/${ARCH}"
+             cp "${PKGVER}.noarch.xbps" "bootstrap-index/${ARCH}/"
+             XBPS_TARGET_ARCH="${ARCH}" xbps-rindex -a "bootstrap-index/${ARCH}/${PKGVER}.noarch.xbps"
+             XBPS_TARGET_ARCH="${ARCH}" xbps-rindex \
+             --privkey "$PRIVKEY_FILE" \
+             --sign \
+             --signedby "$SIGN_BY" \
+             "bootstrap-index/${ARCH}"
+             # Rename to just "{arch}-repodata" for the flat release layout
+             cp "bootstrap-index/${ARCH}/${ARCH}-repodata" "./${ARCH}-repodata"
+          done
 
           rm -f "$PRIVKEY_FILE"
           echo "PKGVER=${PKGVER}" >> "$GITHUB_ENV"
@@ -563,29 +565,36 @@ jobs:
             --yes 2>/dev/null || true
 
           cat <<EOF > release_notes.md
-          ## void-supplements bootstrap package
+          ## void-supplements installation
 
-          Install this once to add the void-supplements repository to your Void Linux system.
+          Run the command below to install void-supplements. Be sure to audit the
+          source code before you run it!
 
           \`\`\`sh
-          sudo xbps-install \\
-            --repository=https://github.com/${GITHUB_REPOSITORY}/releases/download/bootstrap \\
-            ${{ env.PKGNAME }}
+          curl -fsSL https://zveihander.github.io/void-supplements/install.sh | sh
           \`\`\`
 
           The post-install script will:
           - Trust the signing key
           - Detect your architecture
           - Write \`/etc/xbps.d/00-master-void-supplements.conf\`
-          - Give void-supplements package priority over the official repositories
+          - And thats it!
 
           **To remove:** \`xbps-remove ${{ env.PKGNAME }} && rm /etc/xbps.d/00-master-void-supplements.conf\`
           EOF
 
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
-            --title "Repository Bootstrap" \
+            --title "void-supplements bootstrap" \
             --notes-file release_notes.md \
             --prerelease \
             "${{ env.PKGVER }}.noarch.xbps" \
-            noarch-repodata
+             x86_64-repodata \
+             x86_64-musl-repodata \
+             i686-repodata \
+             aarch64-repodata \
+             aarch64-musl-repodata \
+             armv6l-repodata \
+             armv6l-musl-repodata \
+             armv7l-repodata \
+             armv7l-musl-repodata
