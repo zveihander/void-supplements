@@ -11,18 +11,6 @@ concurrency:
   group: publish
   cancel-in-progress: true
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      keyring: ${{ steps.filter.outputs.keyring }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            keyring:
-              - 'keyring/**'
   build:
     name: Build — ${{ matrix.target }}
     runs-on: ubuntu-latest
@@ -484,10 +472,12 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com"
   publish-keyring:
     name: Build and publish keyring bootstrap package
-    needs: changes
+    needs: []
     if: |
       github.event_name == 'workflow_dispatch' ||
-      needs.changes.outputs.keyring == 'true'
+      contains(toJSON(github.event.commits.*.added), 'keyring/') ||
+      contains(toJSON(github.event.commits.*.modified), 'keyring/') ||
+      contains(toJSON(github.event.commits.*.removed), 'keyring/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
