@@ -3,21 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>void supplements</title>
+    <title>void-supplements</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
     <style>
+      @font-face {
+        font-family: "Iosevka";
+        src: url("./iosevka-regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Iosevka";
+        src: url("./iosevka-bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
       :root {
         --bg: #3f3f3f;
         --bg-1: #2b2b2b;
-        --bg-2: #383838;
+        --bg-2: #333333;
+        --bg-3: #383838;
         --fg: #dcdccc;
-        --fg-dim: #8f8f8f;
+        --fg-dim: #6f6f6f;
+        --fg-mid: #9f9f8f;
         --yellow: #e8ae5b;
+        --yellow2: #f0dfaf;
         --green: #7f9f7f;
+        --green2: #9fc59f;
         --red: #cc9393;
         --blue: #8cd0d3;
+        --blue2: #93e0e3;
         --purple: #c0bed1;
         --orange: #dfaf8f;
+        --cyan: #93e0e3;
       }
 
       * {
@@ -29,12 +51,18 @@
       body {
         background: var(--bg-1);
         color: var(--fg);
-        font-family: "Terminus", "Lucida Console", "Courier New", monospace;
+        font-family:
+          "Iosevka", "Cascadia Code", "Fira Code", "Lucida Console", monospace;
         font-size: 14px;
-        line-height: 1.6;
-        max-width: 840px;
+        line-height: 1.65;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 2rem 1.5rem 4rem;
+        padding: 2.5rem 2rem 5rem;
+      }
+
+      ::selection {
+        background: var(--bg-3);
+        color: var(--yellow2);
       }
 
       a {
@@ -42,53 +70,86 @@
         text-decoration: none;
       }
       a:hover {
-        text-decoration: underline;
         color: var(--yellow);
+        text-decoration: underline;
       }
 
       hr {
         border: none;
-        border-top: 1px solid var(--bg-2);
-        margin: 1.5rem 0;
+        border-top: 1px solid var(--bg-3);
+        margin: 2rem 0;
       }
 
       #header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.2rem;
         border-bottom: 1px solid var(--fg-dim);
-        padding-bottom: 1rem;
-        margin-bottom: 1.5rem;
       }
       #header h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
         color: var(--yellow);
-        font-size: 1.2rem;
-        font-weight: normal;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.02em;
       }
-      #header h1 span {
+      #header h1 .dim {
         color: var(--fg-dim);
+        font-weight: 400;
       }
-      #header p {
-        color: var(--fg-dim);
-        margin-top: 0.2rem;
+      #header .tagline {
+        color: var(--fg-mid);
         font-size: 0.9rem;
+        margin-top: 0.2rem;
+      }
+
+      #status-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem 2rem;
+        font-size: 0.82rem;
+        color: var(--fg-dim);
+        margin-bottom: 2rem;
+        padding: 0.6rem 0.9rem;
+        background: var(--bg-2);
+        border-left: 2px solid var(--green);
+      }
+      #status-bar .stat {
+        display: flex;
+        gap: 0.5rem;
+        align-items: baseline;
+      }
+      #status-bar .stat-label {
+        color: var(--fg-dim);
+      }
+      #status-bar .stat-value {
+        color: var(--fg);
+      }
+      #status-bar .stat-value.ok {
+        color: var(--green2);
+      }
+      #status-bar .stat-value.dim {
+        color: var(--fg-mid);
+      }
+      #status-bar a {
+        color: var(--blue);
       }
 
       h2 {
+        font-size: 0.78rem;
+        font-weight: 400;
         color: var(--orange);
-        font-size: 0.85rem;
-        font-weight: normal;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 0.7rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.8rem;
       }
 
       section {
-        margin-bottom: 2rem;
+        margin-bottom: 2.2rem;
       }
 
       .meta {
         display: grid;
         grid-template-columns: max-content 1fr;
-        gap: 0.1rem 1.5rem;
+        gap: 0.15rem 2rem;
         font-size: 0.88rem;
       }
       .meta .k {
@@ -100,12 +161,10 @@
       .meta .v a {
         color: var(--blue);
       }
-
-      /* fingerprint */
       .fingerprint {
-        font-size: 0.82rem;
         color: var(--green);
         letter-spacing: 0.05em;
+        font-size: 0.82rem;
       }
 
       table {
@@ -119,32 +178,34 @@
       th {
         text-align: left;
         color: var(--fg-dim);
-        font-weight: normal;
-        padding: 0.2rem 0.8rem 0.3rem 0;
-        font-size: 0.8rem;
+        font-weight: 400;
+        padding: 0.2rem 1rem 0.3rem 0;
+        font-size: 0.78rem;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
       }
       td {
-        padding: 0.25rem 0.8rem 0.25rem 0;
+        padding: 0.3rem 1rem 0.3rem 0;
         vertical-align: top;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--bg-2);
       }
       tbody tr:hover {
         background: var(--bg-2);
       }
-
       .arch {
         color: var(--green);
       }
       .status-ok {
-        color: var(--green);
+        color: var(--green2);
       }
       .status-empty {
         color: var(--red);
       }
       .conf {
         color: var(--fg-dim);
-        font-size: 0.82rem;
+        font-size: 0.81rem;
       }
 
       pre,
@@ -154,28 +215,136 @@
         color: var(--fg);
       }
       pre {
-        padding: 0.6rem 0.9rem;
+        padding: 0.7rem 1rem;
         overflow-x: auto;
         border-left: 2px solid var(--fg-dim);
-        margin: 0.5rem 0;
-        font-size: 0.85rem;
+        margin: 0.4rem 0;
+        font-size: 0.86rem;
+        line-height: 1.5;
       }
       code {
-        padding: 0.05rem 0.3rem;
+        padding: 0.05rem 0.35rem;
         font-size: 0.88rem;
       }
 
       .steps {
         display: flex;
         flex-direction: column;
-        gap: 0.9rem;
+        gap: 1.2rem;
+      }
+      .step {
       }
       .step-label {
         color: var(--purple);
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         text-transform: uppercase;
-        letter-spacing: 0.07em;
-        margin-bottom: 0.2rem;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+      }
+      .step-note {
+        color: var(--fg-dim);
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        line-height: 1.5;
+      }
+
+      .copy-wrap {
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 0.4rem;
+        right: 0.5rem;
+        background: var(--bg-3);
+        border: 1px solid var(--fg-dim);
+        color: var(--fg-dim);
+        font-family: inherit;
+        font-size: 0.74rem;
+        padding: 0.1rem 0.4rem;
+        cursor: pointer;
+        line-height: 1.4;
+      }
+      .copy-btn:hover {
+        color: var(--fg);
+        border-color: var(--fg);
+      }
+      .copy-btn.copied {
+        color: var(--green2);
+        border-color: var(--green);
+      }
+
+      #commit-log {
+        margin-top: 0.4rem;
+      }
+      .commit-row {
+        display: grid;
+        grid-template-columns: 7ch 1fr max-content;
+        gap: 0 1.2rem;
+        font-size: 0.84rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid var(--bg-2);
+        align-items: baseline;
+      }
+      .commit-row:last-child {
+        border-bottom: none;
+      }
+      .commit-sha {
+        color: var(--yellow);
+        font-size: 0.78rem;
+      }
+      .commit-msg {
+        color: var(--fg);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .commit-date {
+        color: var(--fg-dim);
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+
+      #build-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+      }
+      .build-chip {
+        font-size: 0.78rem;
+        padding: 0.15rem 0.55rem;
+        border: 1px solid var(--bg-3);
+        color: var(--fg-dim);
+      }
+      .build-chip.ok {
+        border-color: var(--green);
+        color: var(--green2);
+      }
+      .build-chip.err {
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .build-chip.dim {
+        border-color: var(--bg-3);
+        color: var(--fg-dim);
+      }
+
+      .skel {
+        display: inline-block;
+        width: 8ch;
+        height: 0.9em;
+        background: var(--bg-3);
+        vertical-align: middle;
+        animation: pulse 1.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.9;
+        }
       }
 
       footer {
@@ -184,13 +353,55 @@
         border-top: 1px solid var(--bg-2);
         color: var(--fg-dim);
         font-size: 0.8rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem 1rem;
+        align-items: center;
+      }
+      footer a {
+        color: var(--fg-dim);
+      }
+      footer a:hover {
+        color: var(--yellow);
+      }
+      footer .sep {
+        color: var(--bg-3);
       }
     </style>
   </head>
   <body>
     <div id="header">
-      <h1>[ <span>zveihander/</span>void-supplements ]</h1>
-      <p>a binary xbps repository for void linux</p>
+      <h1><span class="dim">zveihander/</span>void-supplements</h1>
+      <p class="tagline">a binary xbps repository for void linux</p>
+    </div>
+
+    <div id="status-bar">
+      <div class="stat">
+        <span class="stat-label">packages</span>
+        <span class="stat-value" id="sb-pkgs"><span class="skel"></span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">architectures</span>
+        <span class="stat-value" id="sb-archs"><span class="skel"></span></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">last built</span>
+        <span class="stat-value dim" id="sb-built"
+          ><span class="skel"></span
+        ></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">latest commit</span>
+        <span class="stat-value" id="sb-commit"
+          ><span class="skel"></span
+        ></span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">status</span>
+        <span class="stat-value ok" id="sb-status"
+          ><span class="skel"></span
+        ></span>
+      </div>
     </div>
 
     <section>
@@ -221,7 +432,7 @@
         >
 
         <span class="k">built with</span>
-        <span class="v">xbps-src and friends</span>
+        <span class="v">xbps-src · github actions</span>
 
         <span class="k">license</span>
         <span class="v">see individual packages</span>
@@ -236,16 +447,16 @@
         <thead>
           <tr>
             <th>architecture</th>
-            <th>packages</th>
+            <th>count</th>
             <th>repository url</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="arch-table-body">
           <!-- ARCH_ROWS_PLACEHOLDER -->
         </tbody>
       </table>
-      <p style="margin-top: 0.8rem; font-size: 0.85rem">
-        <a href="./packages.html">search packages</a>
+      <p style="margin-top: 0.9rem; font-size: 0.85rem">
+        <a href="./packages.html">→ browse &amp; search all packages</a>
       </p>
     </section>
 
@@ -254,67 +465,236 @@
     <section>
       <h2>installation</h2>
       <div class="steps">
-        <div>
-          <div class="step-label">1 — add repository</div>
-          <p
-            style="
-              color: var(--fg-dim);
-              font-size: 0.88rem;
-              margin-bottom: 0.3rem;
-            "
-          >
-            replace <code>x86_64</code> with your architecture. run
-            <code>xbps-uhelper arch</code> if unsure.
-          </p>
-          <pre>
-echo 'repository=https://github.com/zveihander/void-supplements/releases/download/x86_64' \
-  | sudo tee /etc/xbps.d/90-void-supplements.conf</pre
-          >
+        <div class="step">
+          <div class="step-label">installer (recommended)</div>
+          <div class="step-note">
+            detects your architecture automatically, prompts for confirmation,
+            installs the signing key, and configures the repo with correct
+            priority.
+          </div>
+          <div class="copy-wrap">
+            <pre id="cmd-curl">
+curl -fsSL https://zveihander.github.io/void-supplements/install.sh | sh</pre
+            >
+            <button class="copy-btn" onclick="copyPre('cmd-curl', this)">
+              copy
+            </button>
+          </div>
         </div>
 
-        <div>
-          <div class="step-label">2 — sync &amp; accept signing key</div>
-          <p
-            style="
-              color: var(--fg-dim);
-              font-size: 0.88rem;
-              margin-bottom: 0.3rem;
-            "
-          >
-            xbps will show the key fingerprint on first sync. verify it matches
-            <code>de:a4:97:6c:18:26:10:84:46:53:27:9a:20:5a:b3:bc</code> before
-            continuing.
-          </p>
-          <pre>sudo xbps-install -S</pre>
+        <div class="step">
+          <div class="step-label">manual</div>
+          <div class="step-note">
+            Replace <code>x86_64</code> with your arch. Run
+            <code>xbps-uhelper arch</code> to check. Supported:
+            <code>x86_64</code> <code>x86_64-musl</code> <code>i686</code>
+            <code>aarch64</code> <code>aarch64-musl</code> <code>armv6l</code>
+            <code>armv6l-musl</code> <code>armv7l</code>
+            <code>armv7l-musl</code>
+          </div>
+          <div class="copy-wrap">
+            <pre id="cmd-manual">
+curl -fsSL https://github.com/zveihander/void-supplements/releases/download/bootstrap/repo-void-supplements-1.0_1.noarch.xbps \
+  -o /tmp/repo-void-supplements-1.0_1.noarch.xbps
+XBPS_TARGET_ARCH=$(xbps-uhelper arch) xbps-rindex -a /tmp/repo-void-supplements-1.0_1.noarch.xbps
+sudo xbps-install --yes --repository=/tmp repo-void-supplements</pre
+            >
+            <button class="copy-btn" onclick="copyPre('cmd-manual', this)">
+              copy
+            </button>
+          </div>
         </div>
 
-        <div>
-          <div class="step-label">3 — install</div>
-          <pre>sudo xbps-install -S &lt;pkgname&gt;</pre>
+        <div class="step">
+          <div class="step-label">verify signing key fingerprint</div>
+          <div class="step-note">
+            On first <code>xbps-install -S</code>, xbps will show the key
+            fingerprint. Verify it matches:
+          </div>
+          <pre>de:a4:97:6c:18:26:10:84:46:53:27:9a:20:5a:b3:bc</pre>
         </div>
 
-        <div>
-          <div class="step-label">optional — import key manually</div>
-          <pre>
-curl -L https://zveihander.github.io/void-supplements/keyring/void-supplements.pub.pem \
-  | sudo xbps-rindex --import-key /dev/stdin</pre
-          >
+        <div class="step">
+          <div class="step-label">removal</div>
+          <div class="step-note">
+            To fully remove void-supplements from your system:
+          </div>
+          <div class="copy-wrap">
+            <pre id="cmd-remove">
+sudo xbps-remove repo-void-supplements
+sudo rm -f /etc/xbps.d/00-void-supplements.conf
+sudo xbps-install -S</pre
+            >
+            <button class="copy-btn" onclick="copyPre('cmd-remove', this)">
+              copy
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
     <hr />
 
+    <section>
+      <h2>recent commits</h2>
+      <div id="commit-log">
+        <div class="commit-row">
+          <span class="commit-sha skel"></span>
+          <span class="commit-msg skel" style="width: 60%"></span>
+          <span class="commit-date skel"></span>
+        </div>
+      </div>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2>build status</h2>
+      <div id="build-grid">
+        <span class="build-chip dim">loading...</span>
+      </div>
+    </section>
+
     <footer>
       <a href="https://github.com/zveihander/void-supplements">source</a>
-      &nbsp;&middot;&nbsp;
+      <span class="sep">·</span>
       <a href="./packages.html">packages</a>
-      &nbsp;&middot;&nbsp;
+      <span class="sep">·</span>
+      <a href="./install.sh">install.sh</a>
+      <span class="sep">·</span>
       <a href="https://github.com/zveihander/void-supplements/releases"
         >releases</a
       >
-      &nbsp;&middot;&nbsp;
+      <span class="sep">·</span>
       <a href="https://voidlinux.org">void linux</a>
     </footer>
+
+    <script>
+      (function () {
+        window.copyPre = function (id, btn) {
+          const text = document.getElementById(id).textContent;
+          navigator.clipboard.writeText(text.trim()).then(() => {
+            btn.textContent = "copied!";
+            btn.classList.add("copied");
+            setTimeout(() => {
+              btn.textContent = "copy";
+              btn.classList.remove("copied");
+            }, 2000);
+          });
+        };
+
+        function reltime(iso) {
+          const diff = (Date.now() - new Date(iso)) / 1000;
+          if (diff < 60) return "just now";
+          if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+          if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+          if (diff < 604800) return Math.floor(diff / 86400) + "d ago";
+          return new Date(iso).toISOString().slice(0, 10);
+        }
+
+        fetch("./repo.json")
+          .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+          .then((data) => {
+            setText("sb-pkgs", data.total_packages ?? "—");
+            setText("sb-archs", data.arch_count ?? "—");
+            setText("sb-built", data.built_at ? reltime(data.built_at) : "—");
+            setText("sb-status", "operational");
+
+            if (data.commit_sha) {
+              const sha = data.commit_sha.slice(0, 7);
+              const url = data.commit_url ?? "#";
+              document.getElementById("sb-commit").innerHTML =
+                `<a href="${url}">${sha}</a>`;
+            }
+
+            if (data.archs && data.archs.length) {
+              const grid = document.getElementById("build-grid");
+              grid.innerHTML = "";
+              for (const a of data.archs) {
+                const cls =
+                  a.status === "ok"
+                    ? "ok"
+                    : a.status === "error"
+                      ? "err"
+                      : "dim";
+                const chip = document.createElement("span");
+                chip.className = "build-chip " + cls;
+                chip.textContent =
+                  (a.status === "ok"
+                    ? "✔ "
+                    : a.status === "error"
+                      ? "✘ "
+                      : "· ") + a.arch;
+                chip.title = a.pkg_count + " package(s)";
+                grid.appendChild(chip);
+              }
+            }
+
+            if (data.commits && data.commits.length) {
+              const log = document.getElementById("commit-log");
+              log.innerHTML = "";
+              for (const c of data.commits.slice(0, 8)) {
+                const row = document.createElement("div");
+                row.className = "commit-row";
+                const sha = c.sha ? c.sha.slice(0, 7) : "-------";
+                const url = c.url ?? "#";
+                const msg = esc(c.msg ?? "");
+                const date = c.date ? reltime(c.date) : "";
+                row.innerHTML = `
+                <a class="commit-sha" href="${url}">${sha}</a>
+                <span class="commit-msg" title="${msg}">${msg}</span>
+                <span class="commit-date">${date}</span>`;
+                log.appendChild(row);
+              }
+            }
+          })
+          .catch(() => {
+            setText("sb-pkgs", "—");
+            setText("sb-archs", "—");
+            setText("sb-built", "—");
+            setText("sb-commit", "—");
+            setText("sb-status", "—");
+            document.getElementById("build-grid").innerHTML =
+              '<span class="build-chip dim">run CI to populate</span>';
+            document.getElementById("commit-log").innerHTML =
+              '<span style="color:var(--fg-dim);font-size:0.84rem">repo.json not yet generated — trigger a CI run.</span>';
+          });
+
+        fetch("./packages.json")
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((pkgs) => {
+            const tbody = document.getElementById("arch-table-body");
+            if (tbody.children.length > 0) return;
+
+            const byArch = {};
+            for (const p of pkgs) {
+              byArch[p.arch] = (byArch[p.arch] ?? 0) + 1;
+            }
+            tbody.innerHTML = "";
+            for (const [arch, count] of Object.entries(byArch).sort()) {
+              const url = `https://github.com/zveihander/void-supplements/releases/download/${arch}`;
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+              <td class="arch">${esc(arch)}</td>
+              <td class="status-ok">${count} package(s)</td>
+              <td class="conf"><code>repository=${esc(url)}</code></td>`;
+              tbody.appendChild(tr);
+            }
+          })
+          .catch(() => {});
+
+        function setText(id, val) {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        }
+        function esc(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+      })();
+    </script>
   </body>
 </html>

@@ -3,21 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>packages — void supplements</title>
+    <title>packages — void-supplements</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <style>
+      @font-face {
+        font-family: "Iosevka";
+        src: url("./iosevka-regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Iosevka";
+        src: url("./iosevka-bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
       :root {
         --bg: #3f3f3f;
         --bg-1: #2b2b2b;
-        --bg-2: #383838;
+        --bg-2: #333333;
+        --bg-3: #383838;
         --fg: #dcdccc;
-        --fg-dim: #8f8f8f;
+        --fg-dim: #6f6f6f;
+        --fg-mid: #9f9f8f;
         --yellow: #e8ae5b;
+        --yellow2: #f0dfaf;
         --green: #7f9f7f;
+        --green2: #9fc59f;
         --red: #cc9393;
         --blue: #8cd0d3;
         --purple: #c0bed1;
         --orange: #dfaf8f;
+        --cyan: #93e0e3;
       }
 
       * {
@@ -29,12 +49,18 @@
       body {
         background: var(--bg-1);
         color: var(--fg);
-        font-family: "Terminus", "Lucida Console", "Courier New", monospace;
+        font-family:
+          "Iosevka", "Cascadia Code", "Fira Code", "Lucida Console", monospace;
         font-size: 14px;
-        line-height: 1.6;
-        max-width: 840px;
+        line-height: 1.65;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 2rem 1.5rem 4rem;
+        padding: 2.5rem 2rem 5rem;
+      }
+
+      ::selection {
+        background: var(--bg-3);
+        color: var(--yellow2);
       }
 
       a {
@@ -42,63 +68,47 @@
         text-decoration: none;
       }
       a:hover {
-        text-decoration: underline;
         color: var(--yellow);
-      }
-
-      hr {
-        border: none;
-        border-top: 1px solid var(--bg-2);
-        margin: 1.5rem 0;
+        text-decoration: underline;
       }
 
       #header {
+        margin-bottom: 1.8rem;
+        padding-bottom: 1.2rem;
         border-bottom: 1px solid var(--fg-dim);
-        padding-bottom: 1rem;
-        margin-bottom: 1.5rem;
       }
       #header h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
         color: var(--yellow);
-        font-size: 1.2rem;
-        font-weight: normal;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.02em;
       }
-      #header h1 span {
+      #header h1 .dim {
         color: var(--fg-dim);
+        font-weight: 400;
       }
-      #header p {
-        color: var(--fg-dim);
-        margin-top: 0.2rem;
+      #header .sub {
+        color: var(--fg-mid);
         font-size: 0.9rem;
+        margin-top: 0.2rem;
       }
 
-      h2 {
-        color: var(--orange);
-        font-size: 0.85rem;
-        font-weight: normal;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 0.7rem;
-      }
-
-      /* ── search bar ── */
       #search-row {
         display: flex;
         gap: 0.6rem;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.9rem;
         flex-wrap: wrap;
       }
-
       #search {
         flex: 1;
-        min-width: 180px;
+        min-width: 200px;
         background: var(--bg-2);
         border: 1px solid var(--fg-dim);
         color: var(--fg);
         font-family: inherit;
-        font-size: 0.88rem;
-        padding: 0.3rem 0.6rem;
+        font-size: 0.9rem;
+        padding: 0.35rem 0.7rem;
         outline: none;
       }
       #search:focus {
@@ -110,19 +120,17 @@
 
       .arch-filter {
         display: flex;
-        gap: 0.4rem;
+        gap: 0.35rem;
         flex-wrap: wrap;
       }
-
       .arch-btn {
         background: var(--bg-2);
         border: 1px solid var(--fg-dim);
         color: var(--fg-dim);
         font-family: inherit;
-        font-size: 0.78rem;
-        padding: 0.2rem 0.5rem;
+        font-size: 0.76rem;
+        padding: 0.22rem 0.55rem;
         cursor: pointer;
-        transition: none;
       }
       .arch-btn:hover {
         border-color: var(--fg);
@@ -130,13 +138,44 @@
       }
       .arch-btn.active {
         border-color: var(--green);
-        color: var(--green);
+        color: var(--green2);
+      }
+
+      #sort-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.7rem;
+        flex-wrap: wrap;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--fg-dim);
+      }
+      .sort-btn {
+        background: none;
+        border: none;
+        color: var(--fg-dim);
+        font-family: inherit;
+        font-size: 0.8rem;
+        cursor: pointer;
+        padding: 0 0.2rem;
+      }
+      .sort-btn:hover {
+        color: var(--fg);
+      }
+      .sort-btn.active {
+        color: var(--yellow);
+      }
+      .sort-btn.active::after {
+        content: " ↓";
+      }
+      .sort-btn.active.asc::after {
+        content: " ↑";
       }
 
       #stats {
         font-size: 0.82rem;
         color: var(--fg-dim);
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
       }
       #stats span {
         color: var(--yellow);
@@ -145,40 +184,56 @@
       #pkg-list {
         display: flex;
         flex-direction: column;
-        gap: 0px;
       }
 
       .pkg-row {
         border-bottom: 1px solid var(--bg-2);
-        padding: 0.55rem 0;
+        padding: 0.6rem 0;
         cursor: pointer;
         display: grid;
         grid-template-columns: 1fr max-content;
         gap: 0 1rem;
         align-items: start;
+        transition: padding-left 0.08s;
       }
-      .pkg-row:hover {
-        background: var(--bg-2);
-        padding-left: 0.4rem;
-      }
+      .pkg-row:hover,
       .pkg-row.open {
         background: var(--bg-2);
-        padding-left: 0.4rem;
+        padding-left: 0.5rem;
       }
 
+      .pkg-main {
+        min-width: 0;
+      }
       .pkg-name {
         color: var(--blue);
-        font-size: 0.92rem;
+        font-size: 0.95rem;
+        font-weight: 700;
       }
       .pkg-ver {
         color: var(--fg-dim);
         font-size: 0.82rem;
+        margin-left: 0.5rem;
+      }
+      .pkg-desc {
+        color: var(--fg-mid);
+        font-size: 0.84rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 0.1rem;
+      }
+
+      .pkg-right {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.2rem;
       }
       .pkg-archs {
-        text-align: right;
-        font-size: 0.78rem;
         display: flex;
-        gap: 0.3rem;
+        gap: 0.25rem;
         flex-wrap: wrap;
         justify-content: flex-end;
       }
@@ -186,74 +241,188 @@
         color: var(--green);
         border: 1px solid var(--green);
         padding: 0 0.3rem;
-        font-size: 0.74rem;
-        opacity: 0.75;
+        font-size: 0.72rem;
+        opacity: 0.7;
+      }
+      .pkg-updated {
+        color: var(--fg-dim);
+        font-size: 0.76rem;
+        white-space: nowrap;
       }
 
       .pkg-detail {
         display: none;
         grid-column: 1 / -1;
         margin-top: 0.5rem;
-        padding: 0.6rem 0.8rem;
+        padding: 0.9rem 1rem;
         background: var(--bg-1);
-        border-left: 2px solid var(--fg-dim);
-        font-size: 0.85rem;
+        border-left: 3px solid var(--fg-dim);
+        font-size: 0.86rem;
       }
       .pkg-detail.visible {
         display: block;
       }
 
+      .detail-section {
+        margin-bottom: 0.9rem;
+      }
+      .detail-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .detail-label {
+        color: var(--orange);
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.35rem;
+      }
+
       .detail-grid {
         display: grid;
         grid-template-columns: max-content 1fr;
-        gap: 0.1rem 1.2rem;
+        gap: 0.12rem 1.8rem;
+        font-size: 0.86rem;
       }
       .detail-grid .k {
         color: var(--fg-dim);
       }
       .detail-grid .v {
         color: var(--fg);
-        word-break: break-all;
+        word-break: break-word;
       }
       .detail-grid .v a {
         color: var(--blue);
       }
 
-      .detail-arch-section {
-        margin-top: 0.6rem;
+      .dep-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        margin-top: 0.2rem;
       }
-      .detail-arch-section h3 {
-        color: var(--purple);
+      .dep-chip {
         font-size: 0.78rem;
-        font-weight: normal;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 0.3rem;
+        padding: 0.05rem 0.45rem;
+        border: 1px solid var(--bg-3);
+        color: var(--fg-mid);
       }
-      .detail-arch-row {
-        display: grid;
-        grid-template-columns: max-content 1fr max-content;
-        gap: 0.1rem 1rem;
-        font-size: 0.82rem;
-        border-bottom: 1px solid var(--bg-2);
-        padding: 0.2rem 0;
-      }
-      .detail-arch-row:last-child {
-        border-bottom: none;
-      }
-      .detail-arch-row .arch-name {
-        color: var(--green);
-      }
-      .detail-arch-row .arch-size {
-        color: var(--fg-dim);
-        text-align: right;
+      .dep-chip.local {
+        border-color: var(--green);
+        color: var(--green2);
       }
 
-      #loading,
+      .arch-dl-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.3rem;
+      }
+      .arch-dl-table th {
+        text-align: left;
+        color: var(--fg-dim);
+        font-weight: 400;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.15rem 1rem 0.2rem 0;
+        border-bottom: 1px solid var(--bg-3);
+      }
+      .arch-dl-table td {
+        padding: 0.22rem 1rem 0.22rem 0;
+        font-size: 0.84rem;
+        border-bottom: 1px solid var(--bg-2);
+        vertical-align: middle;
+      }
+      .arch-dl-table tr:last-child td {
+        border-bottom: none;
+      }
+      .arch-dl-table .col-arch {
+        color: var(--green);
+        width: 14ch;
+      }
+      .arch-dl-table .col-ver {
+        color: var(--fg-dim);
+        width: 16ch;
+      }
+      .arch-dl-table .col-size {
+        color: var(--fg-dim);
+        width: 9ch;
+        text-align: right;
+      }
+      .arch-dl-table .col-dl {
+        text-align: right;
+      }
+      .dl-link {
+        color: var(--blue);
+        font-size: 0.8rem;
+        padding: 0.1rem 0.4rem;
+        border: 1px solid var(--bg-3);
+      }
+      .dl-link:hover {
+        border-color: var(--blue);
+      }
+
+      .install-snip {
+        background: var(--bg-2);
+        padding: 0.5rem 0.8rem;
+        font-size: 0.86rem;
+        border-left: 2px solid var(--fg-dim);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .install-snip code {
+        background: none;
+        color: var(--yellow2);
+      }
+      .copy-btn {
+        background: var(--bg-3);
+        border: 1px solid var(--fg-dim);
+        color: var(--fg-dim);
+        font-family: inherit;
+        font-size: 0.74rem;
+        padding: 0.1rem 0.4rem;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .copy-btn:hover {
+        color: var(--fg);
+        border-color: var(--fg);
+      }
+      .copy-btn.copied {
+        color: var(--green2);
+        border-color: var(--green);
+      }
+
+      .skel {
+        display: inline-block;
+        background: var(--bg-3);
+        height: 0.9em;
+        vertical-align: middle;
+        animation: pulse 1.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+
+      #loading {
+        color: var(--fg-dim);
+        font-size: 0.88rem;
+        padding: 1rem 0;
+      }
       #empty {
         color: var(--fg-dim);
         font-size: 0.88rem;
         padding: 1rem 0;
+        display: none;
       }
 
       footer {
@@ -262,15 +431,25 @@
         border-top: 1px solid var(--bg-2);
         color: var(--fg-dim);
         font-size: 0.8rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem 1rem;
+      }
+      footer a {
+        color: var(--fg-dim);
+      }
+      footer a:hover {
+        color: var(--yellow);
       }
     </style>
   </head>
   <body>
     <div id="header">
       <h1>
-        [ <span>zveihander/</span>void-supplements / <span>packages</span> ]
+        <span class="dim">zveihander/</span>void-supplements
+        <span class="dim">/ packages</span>
       </h1>
-      <p><a href="./index.html">home</a></p>
+      <p class="sub"><a href="./index.html">← home</a></p>
     </div>
 
     <div id="search-row">
@@ -281,116 +460,223 @@
         autocomplete="off"
         spellcheck="false"
       />
-      <div class="arch-filter" id="arch-filter">
-        <!-- injected -->
-      </div>
+      <div class="arch-filter" id="arch-filter"></div>
+    </div>
+
+    <div id="sort-row">
+      <span>sort:</span>
+      <button
+        class="sort-btn active"
+        id="sort-name"
+        onclick="setSort('name', this)"
+      >
+        name
+      </button>
+      <button
+        class="sort-btn"
+        id="sort-updated"
+        onclick="setSort('updated', this)"
+      >
+        updated
+      </button>
+      <button class="sort-btn" id="sort-size" onclick="setSort('size', this)">
+        size
+      </button>
     </div>
 
     <div id="stats">loading...</div>
-    <div id="loading">fetching packages.json...</div>
-    <div id="empty" style="display: none">no packages match</div>
+    <div id="loading">
+      <span class="skel" style="width: 40ch"></span>
+    </div>
+    <div id="empty">no packages match your query</div>
     <div id="pkg-list"></div>
 
     <footer>
       <a href="./index.html">home</a>
-      &nbsp;&middot;&nbsp;
       <a href="https://github.com/zveihander/void-supplements">source</a>
-      &nbsp;&middot;&nbsp;
       <a href="https://github.com/zveihander/void-supplements/releases"
         >releases</a
       >
-      &nbsp;&middot;&nbsp;
       <a href="https://voidlinux.org">void linux</a>
     </footer>
 
     <script>
       (function () {
-        let allPkgs = []; // raw JSON array
-        let grouped = {}; // { pkgname: { versions: Set, archs: [{arch,ver,size,url,filename}] } }
-        let activeArch = ""; // "" = all
+        let grouped = {};
+        let activeArch = "";
         let query = "";
         let openPkg = null;
+        let sortKey = "name";
+        let sortAsc = true;
 
+        function esc(s) {
+          return String(s ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
         function fmtSize(bytes) {
+          if (!bytes) return "—";
           if (bytes < 1024) return bytes + " B";
           if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KiB";
           return (bytes / 1048576).toFixed(1) + " MiB";
         }
-
-        function escHtml(s) {
-          return s
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
+        function reltime(iso) {
+          if (!iso) return "—";
+          const diff = (Date.now() - new Date(iso)) / 1000;
+          if (diff < 60) return "just now";
+          if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+          if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+          if (diff < 604800) return Math.floor(diff / 86400) + "d ago";
+          return new Date(iso).toISOString().slice(0, 10);
         }
 
         function groupPackages(pkgs) {
           const g = {};
           for (const p of pkgs) {
-            if (!g[p.name]) g[p.name] = { archs: [] };
+            if (!g[p.name]) {
+              g[p.name] = {
+                archs: [],
+                short_desc: p.short_desc ?? "",
+                homepage: p.homepage ?? "",
+                license: p.license ?? "",
+                depends: p.depends ?? [],
+                maintainer: p.maintainer ?? "",
+                built_at: p.built_at ?? null,
+                max_size: 0,
+              };
+            }
             g[p.name].archs.push(p);
+            if (
+              p.built_at &&
+              (!g[p.name].built_at || p.built_at > g[p.name].built_at)
+            ) {
+              g[p.name].built_at = p.built_at;
+            }
+            if (p.size > g[p.name].max_size) g[p.name].max_size = p.size;
+            if (p.short_desc) g[p.name].short_desc = p.short_desc;
+            if (p.homepage) g[p.name].homepage = p.homepage;
+            if (p.license) g[p.name].license = p.license;
+            if (p.depends && p.depends.length) g[p.name].depends = p.depends;
+            if (p.maintainer) g[p.name].maintainer = p.maintainer;
           }
           return g;
         }
+
+        window.copyText = function (text, btn) {
+          navigator.clipboard.writeText(text).then(() => {
+            btn.textContent = "copied!";
+            btn.classList.add("copied");
+            setTimeout(() => {
+              btn.textContent = "copy";
+              btn.classList.remove("copied");
+            }, 2000);
+          });
+        };
+
+        window.setSort = function (key, btn) {
+          if (sortKey === key) {
+            sortAsc = !sortAsc;
+          } else {
+            sortKey = key;
+            sortAsc = key === "name";
+          }
+          document.querySelectorAll(".sort-btn").forEach((b) => {
+            b.classList.remove("active", "asc");
+          });
+          btn.classList.add("active");
+          if (sortAsc) btn.classList.add("asc");
+          render();
+        };
 
         function render() {
           const list = document.getElementById("pkg-list");
           const stats = document.getElementById("stats");
           const empty = document.getElementById("empty");
-
           const q = query.toLowerCase().trim();
 
-          const names = Object.keys(grouped)
-            .filter((name) => {
-              if (q && !name.toLowerCase().includes(q)) return false;
-              if (activeArch) {
-                return grouped[name].archs.some((a) => a.arch === activeArch);
-              }
-              return true;
-            })
-            .sort();
+          let names = Object.keys(grouped).filter((name) => {
+            if (
+              q &&
+              !name.toLowerCase().includes(q) &&
+              !(grouped[name].short_desc ?? "").toLowerCase().includes(q)
+            )
+              return false;
+            if (activeArch)
+              return grouped[name].archs.some((a) => a.arch === activeArch);
+            return true;
+          });
 
-          stats.innerHTML = `showing <span>${names.length}</span> of <span>${Object.keys(grouped).length}</span> packages`;
+          names.sort((a, b) => {
+            let va, vb;
+            if (sortKey === "updated") {
+              va = grouped[a].built_at ?? "";
+              vb = grouped[b].built_at ?? "";
+            } else if (sortKey === "size") {
+              va = grouped[a].max_size;
+              vb = grouped[b].max_size;
+            } else {
+              va = a;
+              vb = b;
+            }
+            if (va < vb) return sortAsc ? -1 : 1;
+            if (va > vb) return sortAsc ? 1 : -1;
+            return 0;
+          });
+
+          const total = Object.keys(grouped).length;
+          stats.innerHTML = `showing <span>${names.length}</span> of <span>${total}</span> package${total !== 1 ? "s" : ""}`;
           empty.style.display = names.length === 0 ? "block" : "none";
-
           list.innerHTML = "";
+
           for (const name of names) {
             const entry = grouped[name];
-
             const archs = activeArch
               ? entry.archs.filter((a) => a.arch === activeArch)
               : entry.archs;
 
-            const ver = archs
-              .map((a) => a.version)
-              .sort()
-              .slice(-1)[0];
+            const ver =
+              archs
+                .map((a) => a.version)
+                .sort()
+                .slice(-1)[0] ?? "";
+            const archSet = [...new Set(archs.map((a) => a.arch))].sort();
+            const isOpen = openPkg === name;
 
             const row = document.createElement("div");
-            row.className = "pkg-row" + (openPkg === name ? " open" : "");
+            row.className = "pkg-row" + (isOpen ? " open" : "");
             row.dataset.name = name;
 
-            const archTags = [...new Set(archs.map((a) => a.arch))]
-              .map((a) => `<span class="arch-tag">${escHtml(a)}</span>`)
+            const archTags = archSet
+              .map((a) => `<span class="arch-tag">${esc(a)}</span>`)
               .join("");
 
+            const updatedStr = entry.built_at ? reltime(entry.built_at) : "";
+
             row.innerHTML = `
-            <div>
-              <span class="pkg-name">${escHtml(name)}</span>
-              <span class="pkg-ver"> ${escHtml(ver)}</span>
+            <div class="pkg-main">
+              <div>
+                <span class="pkg-name">${esc(name)}</span>
+                <span class="pkg-ver">${esc(ver)}</span>
+              </div>
+              ${entry.short_desc ? `<div class="pkg-desc">${esc(entry.short_desc)}</div>` : ""}
             </div>
-            <div class="pkg-archs">${archTags}</div>
-            <div class="pkg-detail${openPkg === name ? " visible" : ""}" id="detail-${escHtml(name)}">
-              ${renderDetail(name, archs)}
+            <div class="pkg-right">
+              <div class="pkg-archs">${archTags}</div>
+              ${updatedStr ? `<div class="pkg-updated">${esc(updatedStr)}</div>` : ""}
+            </div>
+            <div class="pkg-detail${isOpen ? " visible" : ""}" id="detail-${esc(name)}">
+              ${renderDetail(name, entry, archs)}
             </div>`;
 
             row.addEventListener("click", function (e) {
-              if (e.target.tagName === "A") return;
-              if (openPkg === name) {
-                openPkg = null;
-              } else {
-                openPkg = name;
-              }
+              if (
+                e.target.tagName === "A" ||
+                e.target.classList.contains("copy-btn")
+              )
+                return;
+              openPkg = openPkg === name ? null : name;
               render();
             });
 
@@ -398,55 +684,120 @@
           }
         }
 
-        function renderDetail(name, archs) {
-          const rows = archs
+        function renderDetail(name, entry, archs) {
+          const ver =
+            archs
+              .map((a) => a.version)
+              .sort()
+              .slice(-1)[0] ?? "—";
+          const installCmd = `sudo xbps-install -S ${name}`;
+
+          let infoRows = `
+          <span class="k">name</span>      <span class="v">${esc(name)}</span>
+          <span class="k">version</span>   <span class="v">${esc(ver)}</span>`;
+          if (entry.short_desc)
+            infoRows += `
+          <span class="k">description</span> <span class="v">${esc(entry.short_desc)}</span>`;
+          if (entry.license)
+            infoRows += `
+          <span class="k">license</span>   <span class="v">${esc(entry.license)}</span>`;
+          if (entry.homepage)
+            infoRows += `
+          <span class="k">homepage</span>  <span class="v"><a href="${esc(entry.homepage)}" target="_blank" rel="noopener">${esc(entry.homepage)}</a></span>`;
+          if (entry.maintainer)
+            infoRows += `
+          <span class="k">maintainer</span><span class="v">${esc(entry.maintainer)}</span>`;
+          if (entry.built_at)
+            infoRows += `
+          <span class="k">last built</span><span class="v">${esc(new Date(entry.built_at).toUTCString())}</span>`;
+
+          let depsHtml = "";
+          if (entry.depends && entry.depends.length) {
+            const chips = entry.depends
+              .map((d) => {
+                const depName = d.replace(/[><=].*/, "");
+                const isLocal = !!grouped[depName];
+                return `<span class="dep-chip${isLocal ? " local" : ""}" title="${esc(d)}">${esc(depName)}</span>`;
+              })
+              .join("");
+            depsHtml = `
+            <div class="detail-section">
+              <div class="detail-label">dependencies</div>
+              <div class="dep-list">${chips}</div>
+              <div style="margin-top:0.35rem;font-size:0.78rem;color:var(--fg-dim)">
+                <span style="color:var(--green2)">■</span> green = also in this repo
+              </div>
+            </div>`;
+          }
+
+          const sortedArchs = [...archs].sort((a, b) =>
+            a.arch < b.arch ? -1 : 1,
+          );
+          const dlRows = sortedArchs
             .map(
               (a) => `
-          <div class="detail-arch-row">
-            <span class="arch-name">${escHtml(a.arch)}</span>
-            <span><a href="${escHtml(a.url)}">${escHtml(a.filename)}</a></span>
-            <span class="arch-size">${fmtSize(a.size)}</span>
-          </div>`,
+          <tr>
+            <td class="col-arch">${esc(a.arch)}</td>
+            <td class="col-ver">${esc(a.version)}</td>
+            <td class="col-size">${fmtSize(a.size)}</td>
+            <td class="col-dl"><a class="dl-link" href="${esc(a.url)}" download>↓ .xbps</a></td>
+          </tr>`,
             )
             .join("");
 
           return `
-          <div class="detail-grid">
-            <span class="k">package</span> <span class="v">${escHtml(name)}</span>
-            <span class="k">version</span>  <span class="v">${escHtml(archs[0].version)}</span>
+          <div class="detail-section">
+            <div class="detail-label">package info</div>
+            <div class="detail-grid">${infoRows}</div>
           </div>
-          <div class="detail-arch-section">
-            <h3>downloads</h3>
-            ${rows}
+
+          ${depsHtml}
+
+          <div class="detail-section">
+            <div class="detail-label">install</div>
+            <div class="install-snip">
+              <code>${esc(installCmd)}</code>
+              <button class="copy-btn" onclick="copyText(${JSON.stringify(installCmd)}, this)">copy</button>
+            </div>
           </div>
-          <div style="margin-top:0.6rem;font-size:0.82rem;color:var(--fg-dim)">
-            install: <code style="background:var(--bg-2);padding:0.1rem 0.3rem">sudo xbps-install -S ${escHtml(name)}</code>
+
+          <div class="detail-section">
+            <div class="detail-label">downloads</div>
+            <table class="arch-dl-table">
+              <thead>
+                <tr>
+                  <th>arch</th>
+                  <th>version</th>
+                  <th style="text-align:right">size</th>
+                  <th style="text-align:right">file</th>
+                </tr>
+              </thead>
+              <tbody>${dlRows}</tbody>
+            </table>
           </div>`;
         }
 
         function buildArchButtons(archs) {
           const container = document.getElementById("arch-filter");
           container.innerHTML = "";
-
           const all = document.createElement("button");
           all.className = "arch-btn" + (activeArch === "" ? " active" : "");
           all.textContent = "all";
-          all.addEventListener("click", () => {
+          all.onclick = () => {
             activeArch = "";
             buildArchButtons(archs);
             render();
-          });
+          };
           container.appendChild(all);
-
           for (const arch of archs) {
             const btn = document.createElement("button");
             btn.className = "arch-btn" + (activeArch === arch ? " active" : "");
             btn.textContent = arch;
-            btn.addEventListener("click", () => {
+            btn.onclick = () => {
               activeArch = arch;
               buildArchButtons(archs);
               render();
-            });
+            };
             container.appendChild(btn);
           }
         }
@@ -459,6 +810,18 @@
             render();
           });
 
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "/" && document.activeElement.id !== "search") {
+            e.preventDefault();
+            document.getElementById("search").focus();
+          }
+          if (e.key === "Escape") {
+            document.getElementById("search").blur();
+            openPkg = null;
+            render();
+          }
+        });
+
         fetch("./packages.json")
           .then((r) => {
             if (!r.ok) throw new Error("HTTP " + r.status);
@@ -466,9 +829,7 @@
           })
           .then((data) => {
             document.getElementById("loading").style.display = "none";
-            allPkgs = data;
             grouped = groupPackages(data);
-
             const archs = [...new Set(data.map((p) => p.arch))].sort();
             buildArchButtons(archs);
             render();

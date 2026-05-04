@@ -432,6 +432,8 @@ jobs:
 
           cp main-repo/site/index.html pages/index.html 2>/dev/null || true
           cp main-repo/site/packages.html pages/packages.html 2>/dev/null || true
+          cp main-repo/site/assets/iosevka-regular.woff2 pages/iosevka-regular.woff2 2>/dev/null || true
+          cp main-repo/site/assets/iosevka-bold.woff2 pages/iosevka-bold.woff2 2>/dev/null || true
           cp main-repo/site/assets/favicon.svg pages/favicon.svg 2>/dev/null || true
           cp main-repo/keyring/void-supplements.pub.pem pages/void-supplements.pub.pem 2>/dev/null || true
           cp main-repo/install.sh pages/install.sh 2>/dev/null || true
@@ -474,7 +476,138 @@ jobs:
           done
           printf '\n]\n' >> pages/packages.json
           echo "packages.json generated:"
-          cat pages/packages.json
+          cat pages/packages.Jason
+      - name: Generate enriched packages.json
+        run: |
+          printf '[\n' > pages/packages.json
+          FIRST=1
+
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
+
+            for pkg in "$arch_dir"*.xbps; do
+              [ -f "$pkg" ] || continue
+
+              fname="$(basename "$pkg")"
+              base="${fname%.xbps}"
+              pkgarch="${base##*.}"
+              verrev="${base%.*}"
+              pkgname="$(echo "$verrev" | sed 's/-[0-9].*//')"
+              version="$(echo "$verrev" | sed "s/^${pkgname}-//")"
+              size="$(stat -c%s "$pkg")"
+              TAG="${arch}"
+              url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/${fname}"
+
+              TEMPLATE="main-repo/packages/${pkgname}/template"
+
+              short_desc=""
+              homepage=""
+              license=""
+              maintainer=""
+              depends_json="[]"
+
+              if [ -f "$TEMPLATE" ]; then
+                short_desc="$(grep  '^short_desc=' "$TEMPLATE" | head -1 | sed 's/^short_desc=//;s/"//g;s/'\''//g')"
+                homepage="$(grep    '^homepage='   "$TEMPLATE" | head -1 | sed 's/^homepage=//;s/"//g;s/'\''//g')"
+                license="$(grep     '^license='    "$TEMPLATE" | head -1 | sed 's/^license=//;s/"//g;s/'\''//g')"
+                maintainer="$(grep  '^maintainer=' "$TEMPLATE" | head -1 | sed 's/^maintainer=//;s/"//g;s/'\''//g')"
+
+                raw_deps="$(grep '^depends=' "$TEMPLATE" | head -1 | sed 's/^depends=//;s/"//g;s/'\''//g')"
+                if [ -n "$raw_deps" ]; then
+                  depends_json="["
+                  dep_first=1
+                  for dep in $raw_deps; do
+                    [ "$dep_first" -eq 1 ] && dep_first=0 || depends_json="${depends_json},"
+                    depends_json="${depends_json}\"$(echo "$dep" | sed 's/"/\\"/g')\""
+                  done
+                  depends_json="${depends_json}]"
+                fi
+              fi
+
+              built_at="$(date -u -r "$pkg" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || \
+                          stat -c %y "$pkg" | sed 's/ /T/;s/ .*/Z/')"
+
+              [ "$FIRST" -eq 1 ] && FIRST=0 || printf ',\n' >> pages/packages.json
+
+              printf '  {
+              "name":"%s","version":"%s","arch":"%s",
+              "filename":"%s","size":%s,"url":"%s",
+                  "built_at":"%s",
+                  "short_desc":"%s",
+                  "homepage":"%s",
+                  "license":"%s",
+                  "maintainer":"%s",
+                  "depends":%s
+              }' \
+                "$pkgname" "$version" "$arch" "$fname" "$size" "$url" \
+                "$built_at" \
+                "$(echo "$short_desc" | sed 's/"/\\"/g')" \
+                "$(echo "$homepage"   | sed 's/"/\\"/g')" \
+                "$(echo "$license"    | sed 's/"/\\"/g')" \
+                "$(echo "$maintainer" | sed 's/"/\\"/g')" \
+                "$depends_json" >> pages/packages.json
+            done
+          done
+
+          printf '\n]\n' >> pages/packages.json
+          echo "packages.json generated ($(wc -c < pages/packages.json) bytes)"
+      - name: Generate repo.json
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          TOTAL_PKGS=0
+          ARCH_JSON="["
+          ARCH_FIRST=1
+
+          for arch_dir in all-staging/repo-*/; do
+            arch="$(basename "$arch_dir" | sed 's/^repo-//')"
+            count="$(find "$arch_dir" -name "*.xbps" | wc -l)"
+            status="ok"
+            [ "$count" -eq 0 ] && status="empty"
+            TOTAL_PKGS=$((TOTAL_PKGS + count))
+
+            [ "$ARCH_FIRST" -eq 1 ] && ARCH_FIRST=0 || ARCH_JSON="${ARCH_JSON},"
+            ARCH_JSON="${ARCH_JSON}{\"arch\":\"${arch}\",\"pkg_count\":${count},\"status\":\"${status}\"}"
+          done
+          ARCH_JSON="${ARCH_JSON}]"
+
+          ARCH_COUNT="$(echo "$ARCH_JSON" | tr ',' '\n' | grep '"arch"' | wc -l)"
+
+          SHA="$(git -C main-repo rev-parse HEAD 2>/dev/null || echo "")"
+          SHA7="${SHA:0:7}"
+          COMMIT_MSG="$(git -C main-repo log -1 --pretty=format:'%s' 2>/dev/null | sed 's/"/\\"/g' || echo "")"
+          COMMIT_DATE="$(git -C main-repo log -1 --pretty=format:'%cI' 2>/dev/null || echo "")"
+          COMMIT_URL="https://github.com/${GITHUB_REPOSITORY}/commit/${SHA}"
+
+          COMMITS_JSON="["
+          C_FIRST=1
+          while IFS='|' read -r sha msg date; do
+            [ -z "$sha" ] && continue
+            [ "$C_FIRST" -eq 1 ] && C_FIRST=0 || COMMITS_JSON="${COMMITS_JSON},"
+            safe_msg="$(echo "$msg" | sed 's/"/\\"/g')"
+            COMMITS_JSON="${COMMITS_JSON}{\"sha\":\"${sha}\",\"msg\":\"${safe_msg}\",\"date\":\"${date}\",\"url\":\"https://github.com/${GITHUB_REPOSITORY}/commit/${sha}\"}"
+          done < <(git -C main-repo log -10 --pretty=format:'%H|%s|%cI' 2>/dev/null)
+          COMMITS_JSON="${COMMITS_JSON}]"
+
+          BUILT_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          cat > pages/repo.json <<EOF
+          {
+            "built_at":       "${BUILT_AT}",
+            "commit_sha":     "${SHA}",
+            "commit_sha7":    "${SHA7}",
+            "commit_msg":     "${COMMIT_MSG}",
+            "commit_date":    "${COMMIT_DATE}",
+            "commit_url":     "${COMMIT_URL}",
+            "total_packages": ${TOTAL_PKGS},
+            "arch_count":     ${ARCH_COUNT},
+            "archs":          ${ARCH_JSON},
+            "commits":        ${COMMITS_JSON}
+          }
+          EOF
+
+          echo "repo.json generated:"
+          cat pages/repo.json
       - name: Deploy landing page to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -508,7 +641,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           XBPS_PASSPHRASE: ${{ secrets.XBPS_PASSPHRASE }}
           SIGN_BY: ${{ secrets.SIGN_BY }}
-        run: |2
+        run: |
           export XBPS_PASSPHRASE="$XBPS_PASSPHRASE"
           export XBPS_TARGET_ARCH="noarch"
 
@@ -548,7 +681,6 @@ jobs:
              --sign \
              --signedby "$SIGN_BY" \
              "bootstrap-index/${ARCH}"
-             # Rename to just "{arch}-repodata" for the flat release layout
              cp "bootstrap-index/${ARCH}/${ARCH}-repodata" "./${ARCH}-repodata"
           done
 
