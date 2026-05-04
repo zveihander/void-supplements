@@ -476,7 +476,6 @@ jobs:
           done
           printf '\n]\n' >> pages/packages.json
           echo "packages.json generated:"
-          cat pages/packages.Jason
       - name: Generate enriched packages.json
         run: |
           printf '[\n' > pages/packages.json
