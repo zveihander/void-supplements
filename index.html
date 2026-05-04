@@ -452,7 +452,7 @@
           </tr>
         </thead>
         <tbody id="arch-table-body">
-          <tr><td class='arch'>aarch64-musl</td><td class='status-ok'>8 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/aarch64-musl</code></td></tr><tr><td class='arch'>aarch64</td><td class='status-ok'>9 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/aarch64</code></td></tr><tr><td class='arch'>armv6l-musl</td><td class='status-ok'>1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv6l-musl</code></td></tr><tr><td class='arch'>armv6l</td><td class='status-ok'>1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv6l</code></td></tr><tr><td class='arch'>armv7l-musl</td><td class='status-ok'>6 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv7l-musl</code></td></tr><tr><td class='arch'>armv7l</td><td class='status-ok'>6 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv7l</code></td></tr><tr><td class='arch'>i686</td><td class='status-ok'>6 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/i686</code></td></tr><tr><td class='arch'>x86_64-musl</td><td class='status-ok'>8 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/x86_64-musl</code></td></tr><tr><td class='arch'>x86_64</td><td class='status-ok'>9 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/x86_64</code></td></tr>
+          <tr><td class='arch'>aarch64-musl</td><td class='status-ok'>8 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/aarch64-musl</code></td></tr><tr><td class='arch'>aarch64</td><td class='status-ok'>1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/aarch64</code></td></tr><tr><td class='arch'>armv6l-musl</td><td class='status-ok'>1 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv6l-musl</code></td></tr><tr><td class='arch'>armv7l-musl</td><td class='status-ok'>6 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/armv7l-musl</code></td></tr><tr><td class='arch'>i686</td><td class='status-ok'>6 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/i686</code></td></tr><tr><td class='arch'>x86_64-musl</td><td class='status-ok'>8 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/x86_64-musl</code></td></tr><tr><td class='arch'>x86_64</td><td class='status-ok'>9 package(s)</td><td class='conf'><code>repository=https://github.com/zveihander/void-supplements/releases/download/x86_64</code></td></tr>
         </tbody>
       </table>
       <p style="margin-top: 0.9rem; font-size: 0.85rem">
@@ -485,10 +485,11 @@ curl -fsSL https://zveihander.github.io/void-supplements/install.sh | sh</pre
         <div class="step">
           <div class="step-label">manual</div>
           <div class="step-note">
-            Replace <code>x86_64</code> with your arch. Run
-            <code>xbps-uhelper arch</code> to check. Supported:
-            <code>x86_64</code> <code>x86_64-musl</code> <code>i686</code>
-            <code>aarch64</code> <code>aarch64-musl</code> <code>armv6l</code>
+            replace <code>x86_64</code> with your architecture. run
+            <code>xbps-uhelper arch</code> to check if you do not know your
+            architecture. the supported architectures are: <code>x86_64</code>
+            <code>x86_64-musl</code> <code>i686</code> <code>aarch64</code>
+            <code>aarch64-musl</code> <code>armv6l</code>
             <code>armv6l-musl</code> <code>armv7l</code>
             <code>armv7l-musl</code>
           </div>
@@ -508,8 +509,8 @@ sudo xbps-install --yes --repository=/tmp repo-void-supplements</pre
         <div class="step">
           <div class="step-label">verify signing key fingerprint</div>
           <div class="step-note">
-            On first <code>xbps-install -S</code>, xbps will show the key
-            fingerprint. Verify it matches:
+            on first <code>xbps-install -S</code>, xbps will show the key
+            fingerprint. verify it matches:
           </div>
           <pre>de:a4:97:6c:18:26:10:84:46:53:27:9a:20:5a:b3:bc</pre>
         </div>
@@ -517,12 +518,13 @@ sudo xbps-install --yes --repository=/tmp repo-void-supplements</pre
         <div class="step">
           <div class="step-label">removal</div>
           <div class="step-note">
-            To fully remove void-supplements from your system:
+            to fully remove void-supplements from your system (note that this
+            does not remove installed packages):
           </div>
           <div class="copy-wrap">
             <pre id="cmd-remove">
 sudo xbps-remove repo-void-supplements
-sudo rm -f /etc/xbps.d/00-void-supplements.conf
+sudo rm -f /etc/xbps.d/00-master-void-supplements.conf
 sudo xbps-install -S</pre
             >
             <button class="copy-btn" onclick="copyPre('cmd-remove', this)">
