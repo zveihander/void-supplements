@@ -1,6 +1,6 @@
 # Template file for 'zen-browser'
 pkgname=zen-browser
-version=1.19.10b
+version=1.19.11b
 revision=1
 archs="x86_64 aarch64"
 hostmakedepends="tar xz"
@@ -15,11 +15,11 @@ nostrip=yes
 case "$XBPS_TARGET_MACHINE" in
 x86_64*)
     _upstream_arch="x86_64"
-    checksum=afba63e56a638d0c6f2dffcc16e59c20055c06ab2df95270daf70a463028b973
+    checksum=65df3ffeb31f8046aca55ad70d6cf0c5130c25b1e8e470a047e5732b98137f19
     ;;
 aarch64*)
     _upstream_arch="aarch64"
-    checksum=2eb4c1390ce6e60c0a2f62b0acd69991e6fdf1506ba2dd5cd4b066470ce11e8a
+    checksum=d6367dfc66449c7defa758502f9f5709982254ad5a5d88b9a9f46f26a46177bf
     ;;
 esac
 
