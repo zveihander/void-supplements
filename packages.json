@@ -2,7 +2,7 @@
   {
     "name":"bun","version":"1.3.13_1","arch":"aarch64-musl",
     "filename":"bun-1.3.13_1.aarch64-musl.xbps","size":30929088,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/bun-1.3.13_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Incredibly fast JavaScript runtime, bundler, test runner, and package manager",
         "homepage":"https://bun.sh",
         "license":"MIT",
@@ -12,7 +12,7 @@
   {
     "name":"shellcheck","version":"0.11.0_1","arch":"aarch64-musl",
     "filename":"shellcheck-0.11.0_1.aarch64-musl.xbps","size":8884559,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/shellcheck-0.11.0_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Static analysis tool for shell scripts",
         "homepage":"https://www.shellcheck.net",
         "license":"GPL-3.0-only",
@@ -20,9 +20,19 @@
         "depends":[]
     },
   {
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"aarch64-musl",
+    "filename":"xdg-ninja-8d3c540_1.aarch64-musl.xbps","size":84259,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/xdg-ninja-8d3c540_1.aarch64-musl.xbps",
+        "built_at":"2026-05-05T09:48:20Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
+        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
+        "depends":["jq"]
+    },
+  {
     "name":"zig","version":"0.16.0_1","arch":"aarch64-musl",
     "filename":"zig-0.16.0_1.aarch64-musl.xbps","size":561,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zig-0.16.0_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -32,7 +42,7 @@
   {
     "name":"zig0.15","version":"0.15.2_1","arch":"aarch64-musl",
     "filename":"zig0.15-0.15.2_1.aarch64-musl.xbps","size":67532212,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zig0.15-0.15.2_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:25Z",
+        "built_at":"2026-05-05T09:48:24Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -42,7 +52,7 @@
   {
     "name":"zig0.16","version":"0.16.0_1","arch":"aarch64-musl",
     "filename":"zig0.16-0.16.0_1.aarch64-musl.xbps","size":70114973,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zig0.16-0.16.0_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -52,7 +62,7 @@
   {
     "name":"zls","version":"0.16.0_1","arch":"aarch64-musl",
     "filename":"zls-0.16.0_1.aarch64-musl.xbps","size":538,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zls-0.16.0_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -62,7 +72,7 @@
   {
     "name":"zls0.15","version":"0.15.1_1","arch":"aarch64-musl",
     "filename":"zls0.15-0.15.1_1.aarch64-musl.xbps","size":4414975,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zls0.15-0.15.1_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -72,7 +82,7 @@
   {
     "name":"zls0.16","version":"0.16.0_1","arch":"aarch64-musl",
     "filename":"zls0.16-0.16.0_1.aarch64-musl.xbps","size":4729835,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64-musl/zls0.16-0.16.0_1.aarch64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:29Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -80,29 +90,19 @@
         "depends":[]
     },
   {
-    "name":"bun","version":"1.3.13_1","arch":"aarch64",
-    "filename":"bun-1.3.13_1.aarch64.xbps","size":32308411,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/bun-1.3.13_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
-        "short_desc":"Incredibly fast JavaScript runtime, bundler, test runner, and package manager",
-        "homepage":"https://bun.sh",
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"aarch64",
+    "filename":"xdg-ninja-8d3c540_1.aarch64.xbps","size":84228,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/xdg-ninja-8d3c540_1.aarch64.xbps",
+        "built_at":"2026-05-05T09:48:17Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
         "license":"MIT",
         "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"shellcheck","version":"0.11.0_1","arch":"aarch64",
-    "filename":"shellcheck-0.11.0_1.aarch64.xbps","size":8884555,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/shellcheck-0.11.0_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
-        "short_desc":"Static analysis tool for shell scripts",
-        "homepage":"https://www.shellcheck.net",
-        "license":"GPL-3.0-only",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
+        "depends":["jq"]
     },
   {
     "name":"zen-browser","version":"1.19.11b_1","arch":"aarch64",
-    "filename":"zen-browser-1.19.11b_1.aarch64.xbps","size":97648970,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zen-browser-1.19.11b_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:26Z",
+    "filename":"zen-browser-1.19.11b_1.aarch64.xbps","size":97648961,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zen-browser-1.19.11b_1.aarch64.xbps",
+        "built_at":"2026-05-05T09:48:24Z",
         "short_desc":"Welcome to a calmer internet",
         "homepage":"https://www.zen-browser.app/",
         "license":"MPL-2.0",
@@ -110,69 +110,9 @@
         "depends":["desktop-file-utils","hicolor-icon-theme","nss","nspr","pciutils"]
     },
   {
-    "name":"zig","version":"0.16.0_1","arch":"aarch64",
-    "filename":"zig-0.16.0_1.aarch64.xbps","size":558,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zig-0.16.0_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:26Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":["zig0.16"]
-    },
-  {
-    "name":"zig0.15","version":"0.15.2_1","arch":"aarch64",
-    "filename":"zig0.15-0.15.2_1.aarch64.xbps","size":67531932,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zig0.15-0.15.2_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zig0.16","version":"0.16.0_1","arch":"aarch64",
-    "filename":"zig0.16-0.16.0_1.aarch64.xbps","size":70115109,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zig0.16-0.16.0_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:29Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zls","version":"0.16.0_1","arch":"aarch64",
-    "filename":"zls-0.16.0_1.aarch64.xbps","size":534,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zls-0.16.0_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:29Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":["zls0.16"]
-    },
-  {
-    "name":"zls0.15","version":"0.15.1_1","arch":"aarch64",
-    "filename":"zls0.15-0.15.1_1.aarch64.xbps","size":4414973,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zls0.15-0.15.1_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:29Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zls0.16","version":"0.16.0_1","arch":"aarch64",
-    "filename":"zls0.16-0.16.0_1.aarch64.xbps","size":4729830,"url":"https://github.com/zveihander/void-supplements/releases/download/aarch64/zls0.16-0.16.0_1.aarch64.xbps",
-        "built_at":"2026-05-04T06:05:29Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
     "name":"shellcheck","version":"0.11.0_1","arch":"armv6l-musl",
     "filename":"shellcheck-0.11.0_1.armv6l-musl.xbps","size":8086123,"url":"https://github.com/zveihander/void-supplements/releases/download/armv6l-musl/shellcheck-0.11.0_1.armv6l-musl.xbps",
-        "built_at":"2026-05-04T06:05:21Z",
+        "built_at":"2026-05-05T09:48:18Z",
         "short_desc":"Static analysis tool for shell scripts",
         "homepage":"https://www.shellcheck.net",
         "license":"GPL-3.0-only",
@@ -180,19 +120,39 @@
         "depends":[]
     },
   {
-    "name":"shellcheck","version":"0.11.0_1","arch":"armv6l",
-    "filename":"shellcheck-0.11.0_1.armv6l.xbps","size":8086119,"url":"https://github.com/zveihander/void-supplements/releases/download/armv6l/shellcheck-0.11.0_1.armv6l.xbps",
-        "built_at":"2026-05-04T06:05:21Z",
-        "short_desc":"Static analysis tool for shell scripts",
-        "homepage":"https://www.shellcheck.net",
-        "license":"GPL-3.0-only",
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"armv6l-musl",
+    "filename":"xdg-ninja-8d3c540_1.armv6l-musl.xbps","size":84231,"url":"https://github.com/zveihander/void-supplements/releases/download/armv6l-musl/xdg-ninja-8d3c540_1.armv6l-musl.xbps",
+        "built_at":"2026-05-05T09:48:18Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
         "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
+        "depends":["jq"]
+    },
+  {
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"armv6l",
+    "filename":"xdg-ninja-8d3c540_1.armv6l.xbps","size":84250,"url":"https://github.com/zveihander/void-supplements/releases/download/armv6l/xdg-ninja-8d3c540_1.armv6l.xbps",
+        "built_at":"2026-05-05T09:48:17Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
+        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
+        "depends":["jq"]
+    },
+  {
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"armv7l-musl",
+    "filename":"xdg-ninja-8d3c540_1.armv7l-musl.xbps","size":84248,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/xdg-ninja-8d3c540_1.armv7l-musl.xbps",
+        "built_at":"2026-05-05T09:48:17Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
+        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
+        "depends":["jq"]
     },
   {
     "name":"zig","version":"0.16.0_1","arch":"armv7l-musl",
     "filename":"zig-0.16.0_1.armv7l-musl.xbps","size":564,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zig-0.16.0_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:20Z",
+        "built_at":"2026-05-05T09:48:17Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -202,7 +162,7 @@
   {
     "name":"zig0.15","version":"0.15.2_1","arch":"armv7l-musl",
     "filename":"zig0.15-0.15.2_1.armv7l-musl.xbps","size":68449513,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zig0.15-0.15.2_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:23Z",
+        "built_at":"2026-05-05T09:48:22Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -212,7 +172,7 @@
   {
     "name":"zig0.16","version":"0.16.0_1","arch":"armv7l-musl",
     "filename":"zig0.16-0.16.0_1.armv7l-musl.xbps","size":70971979,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zig0.16-0.16.0_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -222,7 +182,7 @@
   {
     "name":"zls","version":"0.16.0_1","arch":"armv7l-musl",
     "filename":"zls-0.16.0_1.armv7l-musl.xbps","size":537,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zls-0.16.0_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -232,7 +192,7 @@
   {
     "name":"zls0.15","version":"0.15.1_1","arch":"armv7l-musl",
     "filename":"zls0.15-0.15.1_1.armv7l-musl.xbps","size":4778457,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zls0.15-0.15.1_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -242,7 +202,7 @@
   {
     "name":"zls0.16","version":"0.16.0_1","arch":"armv7l-musl",
     "filename":"zls0.16-0.16.0_1.armv7l-musl.xbps","size":5114237,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l-musl/zls0.16-0.16.0_1.armv7l-musl.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:29Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -250,69 +210,29 @@
         "depends":[]
     },
   {
-    "name":"zig","version":"0.16.0_1","arch":"armv7l",
-    "filename":"zig-0.16.0_1.armv7l.xbps","size":562,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zig-0.16.0_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:20Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"armv7l",
+    "filename":"xdg-ninja-8d3c540_1.armv7l.xbps","size":84228,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/xdg-ninja-8d3c540_1.armv7l.xbps",
+        "built_at":"2026-05-05T09:48:17Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
         "license":"MIT",
         "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":["zig0.16"]
+        "depends":["jq"]
     },
   {
-    "name":"zig0.15","version":"0.15.2_1","arch":"armv7l",
-    "filename":"zig0.15-0.15.2_1.armv7l.xbps","size":68449442,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zig0.15-0.15.2_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:23Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"i686",
+    "filename":"xdg-ninja-8d3c540_1.i686.xbps","size":84237,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/xdg-ninja-8d3c540_1.i686.xbps",
+        "built_at":"2026-05-05T09:48:17Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
         "license":"MIT",
         "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zig0.16","version":"0.16.0_1","arch":"armv7l",
-    "filename":"zig0.16-0.16.0_1.armv7l.xbps","size":70972065,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zig0.16-0.16.0_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:26Z",
-        "short_desc":"Programming language designed for robustness, optimality, and clarity",
-        "homepage":"https://ziglang.org/",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zls","version":"0.16.0_1","arch":"armv7l",
-    "filename":"zls-0.16.0_1.armv7l.xbps","size":532,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zls-0.16.0_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:26Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":["zls0.16"]
-    },
-  {
-    "name":"zls0.15","version":"0.15.1_1","arch":"armv7l",
-    "filename":"zls0.15-0.15.1_1.armv7l.xbps","size":4778454,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zls0.15-0.15.1_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
-    },
-  {
-    "name":"zls0.16","version":"0.16.0_1","arch":"armv7l",
-    "filename":"zls0.16-0.16.0_1.armv7l.xbps","size":5114235,"url":"https://github.com/zveihander/void-supplements/releases/download/armv7l/zls0.16-0.16.0_1.armv7l.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
-        "short_desc":"Zig language server",
-        "homepage":"https://github.com/zigtools/zls",
-        "license":"MIT",
-        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
-        "depends":[]
+        "depends":["jq"]
     },
   {
     "name":"zig","version":"0.16.0_1","arch":"i686",
     "filename":"zig-0.16.0_1.i686.xbps","size":557,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zig-0.16.0_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:23Z",
+        "built_at":"2026-05-05T09:48:17Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -322,7 +242,7 @@
   {
     "name":"zig0.15","version":"0.15.2_1","arch":"i686",
     "filename":"zig0.15-0.15.2_1.i686.xbps","size":72845686,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zig0.15-0.15.2_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:23Z",
+        "built_at":"2026-05-05T09:48:23Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -332,7 +252,7 @@
   {
     "name":"zig0.16","version":"0.16.0_1","arch":"i686",
     "filename":"zig0.16-0.16.0_1.i686.xbps","size":75521386,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zig0.16-0.16.0_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -342,7 +262,7 @@
   {
     "name":"zls","version":"0.16.0_1","arch":"i686",
     "filename":"zls-0.16.0_1.i686.xbps","size":532,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zls-0.16.0_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -352,7 +272,7 @@
   {
     "name":"zls0.15","version":"0.15.1_1","arch":"i686",
     "filename":"zls0.15-0.15.1_1.i686.xbps","size":4675476,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zls0.15-0.15.1_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -362,7 +282,7 @@
   {
     "name":"zls0.16","version":"0.16.0_1","arch":"i686",
     "filename":"zls0.16-0.16.0_1.i686.xbps","size":5062735,"url":"https://github.com/zveihander/void-supplements/releases/download/i686/zls0.16-0.16.0_1.i686.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -372,7 +292,7 @@
   {
     "name":"bun","version":"1.3.13_1","arch":"x86_64-musl",
     "filename":"bun-1.3.13_1.x86_64-musl.xbps","size":31104967,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/bun-1.3.13_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Incredibly fast JavaScript runtime, bundler, test runner, and package manager",
         "homepage":"https://bun.sh",
         "license":"MIT",
@@ -382,7 +302,7 @@
   {
     "name":"shellcheck","version":"0.11.0_1","arch":"x86_64-musl",
     "filename":"shellcheck-0.11.0_1.x86_64-musl.xbps","size":3068266,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/shellcheck-0.11.0_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Static analysis tool for shell scripts",
         "homepage":"https://www.shellcheck.net",
         "license":"GPL-3.0-only",
@@ -390,9 +310,19 @@
         "depends":[]
     },
   {
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"x86_64-musl",
+    "filename":"xdg-ninja-8d3c540_1.x86_64-musl.xbps","size":84248,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/xdg-ninja-8d3c540_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:20Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
+        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
+        "depends":["jq"]
+    },
+  {
     "name":"zig","version":"0.16.0_1","arch":"x86_64-musl",
     "filename":"zig-0.16.0_1.x86_64-musl.xbps","size":566,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zig-0.16.0_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -402,7 +332,7 @@
   {
     "name":"zig0.15","version":"0.15.2_1","arch":"x86_64-musl",
     "filename":"zig0.15-0.15.2_1.x86_64-musl.xbps","size":69544033,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zig0.15-0.15.2_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:25Z",
+        "built_at":"2026-05-05T09:48:24Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -412,7 +342,7 @@
   {
     "name":"zig0.16","version":"0.16.0_1","arch":"x86_64-musl",
     "filename":"zig0.16-0.16.0_1.x86_64-musl.xbps","size":72074205,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zig0.16-0.16.0_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -422,7 +352,7 @@
   {
     "name":"zls","version":"0.16.0_1","arch":"x86_64-musl",
     "filename":"zls-0.16.0_1.x86_64-musl.xbps","size":538,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zls-0.16.0_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -432,7 +362,7 @@
   {
     "name":"zls0.15","version":"0.15.1_1","arch":"x86_64-musl",
     "filename":"zls0.15-0.15.1_1.x86_64-musl.xbps","size":4528898,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zls0.15-0.15.1_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -442,7 +372,7 @@
   {
     "name":"zls0.16","version":"0.16.0_1","arch":"x86_64-musl",
     "filename":"zls0.16-0.16.0_1.x86_64-musl.xbps","size":4789770,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64-musl/zls0.16-0.16.0_1.x86_64-musl.xbps",
-        "built_at":"2026-05-04T06:05:28Z",
+        "built_at":"2026-05-05T09:48:28Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -451,8 +381,8 @@
     },
   {
     "name":"bun","version":"1.3.13_1","arch":"x86_64",
-    "filename":"bun-1.3.13_1.x86_64.xbps","size":32575807,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/bun-1.3.13_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+    "filename":"bun-1.3.13_1.x86_64-musl.xbps","size":31104967,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/bun-1.3.13_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Incredibly fast JavaScript runtime, bundler, test runner, and package manager",
         "homepage":"https://bun.sh",
         "license":"MIT",
@@ -461,8 +391,8 @@
     },
   {
     "name":"shellcheck","version":"0.11.0_1","arch":"x86_64",
-    "filename":"shellcheck-0.11.0_1.x86_64.xbps","size":3068264,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/shellcheck-0.11.0_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:22Z",
+    "filename":"shellcheck-0.11.0_1.x86_64-musl.xbps","size":3068266,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/shellcheck-0.11.0_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:20Z",
         "short_desc":"Static analysis tool for shell scripts",
         "homepage":"https://www.shellcheck.net",
         "license":"GPL-3.0-only",
@@ -470,9 +400,19 @@
         "depends":[]
     },
   {
+    "name":"xdg-ninja","version":"8d3c540_1","arch":"x86_64",
+    "filename":"xdg-ninja-8d3c540_1.x86_64.xbps","size":84247,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/xdg-ninja-8d3c540_1.x86_64.xbps",
+        "built_at":"2026-05-05T09:48:20Z",
+        "short_desc":"A shell script which checks your \$HOME for unwanted files and directories. ",
+        "homepage":"https://github.com/b3nj5m1n/xdg-ninja",
+        "license":"MIT",
+        "maintainer":"Evan Alvarez <evanalvarez@tutamail.com>",
+        "depends":["jq"]
+    },
+  {
     "name":"zen-browser","version":"1.19.11b_1","arch":"x86_64",
-    "filename":"zen-browser-1.19.11b_1.x86_64.xbps","size":111390527,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zen-browser-1.19.11b_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+    "filename":"zen-browser-1.19.11b_1.x86_64.xbps","size":111390538,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zen-browser-1.19.11b_1.x86_64.xbps",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Welcome to a calmer internet",
         "homepage":"https://www.zen-browser.app/",
         "license":"MPL-2.0",
@@ -481,8 +421,8 @@
     },
   {
     "name":"zig","version":"0.16.0_1","arch":"x86_64",
-    "filename":"zig-0.16.0_1.x86_64.xbps","size":562,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig-0.16.0_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:27Z",
+    "filename":"zig-0.16.0_1.x86_64-musl.xbps","size":566,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig-0.16.0_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:27Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -491,8 +431,8 @@
     },
   {
     "name":"zig0.15","version":"0.15.2_1","arch":"x86_64",
-    "filename":"zig0.15-0.15.2_1.x86_64.xbps","size":69544404,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig0.15-0.15.2_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:29Z",
+    "filename":"zig0.15-0.15.2_1.x86_64-musl.xbps","size":69544033,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig0.15-0.15.2_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:30Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -501,8 +441,8 @@
     },
   {
     "name":"zig0.16","version":"0.16.0_1","arch":"x86_64",
-    "filename":"zig0.16-0.16.0_1.x86_64.xbps","size":72074688,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig0.16-0.16.0_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:30Z",
+    "filename":"zig0.16-0.16.0_1.x86_64-musl.xbps","size":72074205,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zig0.16-0.16.0_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:33Z",
         "short_desc":"Programming language designed for robustness, optimality, and clarity",
         "homepage":"https://ziglang.org/",
         "license":"MIT",
@@ -511,8 +451,8 @@
     },
   {
     "name":"zls","version":"0.16.0_1","arch":"x86_64",
-    "filename":"zls-0.16.0_1.x86_64.xbps","size":532,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls-0.16.0_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:30Z",
+    "filename":"zls-0.16.0_1.x86_64-musl.xbps","size":538,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls-0.16.0_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:33Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -521,8 +461,8 @@
     },
   {
     "name":"zls0.15","version":"0.15.1_1","arch":"x86_64",
-    "filename":"zls0.15-0.15.1_1.x86_64.xbps","size":4528892,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls0.15-0.15.1_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:30Z",
+    "filename":"zls0.15-0.15.1_1.x86_64-musl.xbps","size":4528898,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls0.15-0.15.1_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:33Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",
@@ -531,8 +471,8 @@
     },
   {
     "name":"zls0.16","version":"0.16.0_1","arch":"x86_64",
-    "filename":"zls0.16-0.16.0_1.x86_64.xbps","size":4789764,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls0.16-0.16.0_1.x86_64.xbps",
-        "built_at":"2026-05-04T06:05:30Z",
+    "filename":"zls0.16-0.16.0_1.x86_64-musl.xbps","size":4789770,"url":"https://github.com/zveihander/void-supplements/releases/download/x86_64/zls0.16-0.16.0_1.x86_64-musl.xbps",
+        "built_at":"2026-05-05T09:48:33Z",
         "short_desc":"Zig language server",
         "homepage":"https://github.com/zigtools/zls",
         "license":"MIT",

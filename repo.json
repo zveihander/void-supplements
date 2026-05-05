@@ -1,12 +1,12 @@
 {
-  "built_at":       "2026-05-04T06:06:13Z",
-  "commit_sha":     "c748396028ff1fe8ec71d4d81ffb68ed964f2221",
-  "commit_sha7":    "c748396",
-  "commit_msg":     "update: zen-browser updated to version 1.19.11b",
-  "commit_date":    "2026-05-04T00:45:31-05:00",
-  "commit_url":     "https://github.com/zveihander/void-supplements/commit/c748396028ff1fe8ec71d4d81ffb68ed964f2221",
-  "total_packages": 54,
+  "built_at":       "2026-05-05T09:49:26Z",
+  "commit_sha":     "c000d7fa169216cec90991c4eb30e08d6408fa3f",
+  "commit_sha7":    "c000d7f",
+  "commit_msg":     "new: xdg-ninja 8d3c540",
+  "commit_date":    "2026-05-05T04:44:30-05:00",
+  "commit_url":     "https://github.com/zveihander/void-supplements/commit/c000d7fa169216cec90991c4eb30e08d6408fa3f",
+  "total_packages": 48,
   "arch_count":     9,
-  "archs":          [{"arch":"aarch64-musl","pkg_count":8,"status":"ok"},{"arch":"aarch64","pkg_count":9,"status":"ok"},{"arch":"armv6l-musl","pkg_count":1,"status":"ok"},{"arch":"armv6l","pkg_count":1,"status":"ok"},{"arch":"armv7l-musl","pkg_count":6,"status":"ok"},{"arch":"armv7l","pkg_count":6,"status":"ok"},{"arch":"i686","pkg_count":6,"status":"ok"},{"arch":"x86_64-musl","pkg_count":8,"status":"ok"},{"arch":"x86_64","pkg_count":9,"status":"ok"}],
+  "archs":          [{"arch":"aarch64-musl","pkg_count":9,"status":"ok"},{"arch":"aarch64","pkg_count":2,"status":"ok"},{"arch":"armv6l-musl","pkg_count":2,"status":"ok"},{"arch":"armv6l","pkg_count":1,"status":"ok"},{"arch":"armv7l-musl","pkg_count":7,"status":"ok"},{"arch":"armv7l","pkg_count":1,"status":"ok"},{"arch":"i686","pkg_count":7,"status":"ok"},{"arch":"x86_64-musl","pkg_count":9,"status":"ok"},{"arch":"x86_64","pkg_count":10,"status":"ok"}],
   "commits":        []
 }
