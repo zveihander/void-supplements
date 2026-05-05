@@ -1,0 +1,27 @@
+# Template file for 'xdg-ninja'
+pkgname=xdg-ninja
+_gitrev=8d3c540111840b4765c7df5c79221508864c8366
+version=8d3c540
+revision=1
+build_style=gnu-makefile
+hostmakedepends="make"
+depends="jq"
+short_desc="A shell script which checks your \$HOME for unwanted files and directories. "
+maintainer="Evan Alvarez <evanalvarez@tutamail.com>"
+license="MIT"
+homepage="https://github.com/b3nj5m1n/xdg-ninja"
+changelog="https://github.com/b3nj5m1n/xdg-ninja/commits/main"
+distfiles="https://github.com/b3nj5m1n/xdg-ninja/archive/${_gitrev}.tar.gz"
+checksum=4adc41383e0493df6865cfc2253142a318d52cecac1bca96ddf60c81c6535539
+
+post_extract() {
+    if [ -d "${XBPS_BUILDDIR}/xdg-ninja-${_gitrev}" ]; then
+        mv "${XBPS_BUILDDIR}/xdg-ninja-${_gitrev}" "${wrksrc}"
+    fi
+}
+
+do_install() {
+    make DESTDIR="${DESTDIR}" PREFIX="/usr" install
+
+    vlicense LICENSE
+}
