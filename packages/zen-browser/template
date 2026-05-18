@@ -1,6 +1,6 @@
 # Template file for 'zen-browser'
 pkgname=zen-browser
-version=1.19.11b
+version=1.19.13b
 revision=1
 archs="x86_64 aarch64"
 hostmakedepends="tar xz"
@@ -14,36 +14,36 @@ nostrip=yes
 
 case "$XBPS_TARGET_MACHINE" in
 x86_64*)
-    _upstream_arch="x86_64"
-    checksum=65df3ffeb31f8046aca55ad70d6cf0c5130c25b1e8e470a047e5732b98137f19
-    ;;
+  _upstream_arch="x86_64"
+  checksum=dfc79ffb444c6dbf935a60f6ff4c5cb190567baa26f83c8e9cf8457571e1d900
+  ;;
 aarch64*)
-    _upstream_arch="aarch64"
-    checksum=d6367dfc66449c7defa758502f9f5709982254ad5a5d88b9a9f46f26a46177bf
-    ;;
+  _upstream_arch="aarch64"
+  checksum=9e574c63f652f41c2a0f57b4803dc628f66a7f0a89469271abe1844896f039f2
+  ;;
 esac
 
 distfiles="https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-${_upstream_arch}.tar.xz"
 
 do_install() {
-    vmkdir usr/bin
-    vmkdir "usr/lib/${pkgname}"
+  vmkdir usr/bin
+  vmkdir "usr/lib/${pkgname}"
 
-    vcopy "." "usr/lib/${pkgname}"
+  vcopy "." "usr/lib/${pkgname}"
 
-    ln -sf "/usr/lib/${pkgname}/zen" "${DESTDIR}/usr/bin/zen"
+  ln -sf "/usr/lib/${pkgname}/zen" "${DESTDIR}/usr/bin/zen"
 
-    vinstall "${FILESDIR}/zen.desktop" 0644 usr/share/applications/
+  vinstall "${FILESDIR}/zen.desktop" 0644 usr/share/applications/
 
-    vmkdir "usr/lib/${pkgname}/distribution"
-    vinstall "${FILESDIR}/policies.json" 0644 "usr/lib/${pkgname}/distribution"
+  vmkdir "usr/lib/${pkgname}/distribution"
+  vinstall "${FILESDIR}/policies.json" 0644 "usr/lib/${pkgname}/distribution"
 
-    for size in 16 32 48 64 128; do
-        vinstall "browser/chrome/icons/default/default${size}.png" 0644 \
-            "usr/share/icons/hicolor/${size}x${size}/apps" "zen.png"
-    done
+  for size in 16 32 48 64 128; do
+    vinstall "browser/chrome/icons/default/default${size}.png" 0644 \
+      "usr/share/icons/hicolor/${size}x${size}/apps" "zen.png"
+  done
 
-    ln -sf /usr/share/hunspell "${DESTDIR}/usr/lib/${pkgname}/dictionaries"
-    ln -sf /usr/share/hyphen "${DESTDIR}/usr/lib/${pkgname}/hyphenation"
-    ln -sf /usr/lib/libnssckbi.so "${DESTDIR}/usr/lib/${pkgname}/libnssckbi.so"
+  ln -sf /usr/share/hunspell "${DESTDIR}/usr/lib/${pkgname}/dictionaries"
+  ln -sf /usr/share/hyphen "${DESTDIR}/usr/lib/${pkgname}/hyphenation"
+  ln -sf /usr/lib/libnssckbi.so "${DESTDIR}/usr/lib/${pkgname}/libnssckbi.so"
 }
